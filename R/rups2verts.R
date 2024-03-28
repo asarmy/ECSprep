@@ -19,6 +19,7 @@ rups2verts <- function(sf_object) {
   # Add the Rank field if it doesn't exist
   if (!"Rank" %in% names(sf_object)) {
     sf_object$Rank <- "None"
+    warning("Rank attribute is missing. It was added with default values of `None`.\n")
   }
 
   # Convert to line work to vertices
