@@ -5,6 +5,9 @@
 #' @return A data frame with the rupture lines converted to vertices.
 #' @export
 rups2verts <- function(sf_object) {
+  # Check that the object is line-type
+  check_geometry_type(sf_object, "line")
+
   # Add the RUP_ID field if it doesn't exist
   if (!"RUP_ID" %in% names(sf_object)) {
     sf_object$RUP_ID <- seq_len(nrow(sf_object))
