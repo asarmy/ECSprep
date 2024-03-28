@@ -8,8 +8,8 @@ rups2verts <- function(sf_object) {
   # Check that the object is line-type
   check_geometry_type(sf_object, "line")
 
-  # Check that the object is in 4326 (required for this application)
-  check_crs(sf_object)
+  # Convert the object to EPSG:4326 if it is not already in that CRS
+  sf_object <- project_to_4326(sf_object)
 
   # Add the RUP_ID field if it doesn't exist
   if (!"RUP_ID" %in% names(sf_object)) {
@@ -29,7 +29,8 @@ rups2verts <- function(sf_object) {
     dplyr::group_by(RUP_ID) %>%
     dplyr::mutate(NODE_ID = dplyr::row_number()) %>%
     dplyr::ungroup() %>%
-    dplyr::mutate(Latitude = sf::st_coordinates(.)[, "Y"], Longitude = sf::st_coordinates(.)[, "X"]) %>%
+    dplyr::mutate(Latitude = sf::st_coordinates(.)[, "Y"],
+                  Longitude = sf::st_coordinates(.)[, "X"]) %>%
     sf::st_set_geometry(NULL) %>%
     as.data.frame()
 

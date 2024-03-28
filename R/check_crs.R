@@ -11,7 +11,7 @@ check_crs <- function(sf_object) {
   crs <- sf::st_crs(sf_object)
 
   if (is.null(crs$epsg) || crs$epsg != 4326) {
-    stop("Error: Coordinate reference system check failed. The sf object's CRS must EPSG 4326.")
+    stop("Error: Coordinate reference system check failed. The sf object's CRS must EPSG:4326.")
   } else {
     cat("Coordinate reference system check passed.\n")
   }

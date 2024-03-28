@@ -9,12 +9,13 @@
 #' @export
 check_geometry_type <- function(sf_object, geom_category) {
   # Define mapping from simple types to specific geometry types
-  geom_type_mapping <- list(line = c("LINESTRING", "MULTILINESTRING"), point = c("POINT", "MULTIPOINT"))
+  geom_type_mapping <- list(line = c("LINESTRING", "MULTILINESTRING"),
+                            point = c("POINT", "MULTIPOINT"))
 
   # Check if the specified category is valid
   if (!tolower(geom_category) %in% names(geom_type_mapping)) {
-    stop("Error: Invalid geometry category. Please use one of the following: ", paste(names(geom_type_mapping),
-                                                                                      collapse = ", "), ".")
+    stop("Error: Invalid geometry category. Please use one of the following: ",
+         paste(names(geom_type_mapping), collapse = ", "), ".")
   }
 
   # Retrieve the valid types for the specified category
@@ -24,8 +25,9 @@ check_geometry_type <- function(sf_object, geom_category) {
   geom_types <- unique(sf::st_geometry_type(sf_object))
 
   if (!all(geom_types %in% valid_types)) {
-    stop(paste("Error: Geometry check failed. The sf object's geometry type must be one of:", paste(valid_types,
-                                                                                                    collapse = ", "), ". Found types:", paste(geom_types, collapse = ", "), "."))
+    stop(paste("Error: Geometry check failed. The sf object's geometry type must be one of:",
+               paste(valid_types,collapse = ", "), ". Found types:",
+               paste(geom_types, collapse = ", "), "."))
   }
 
   cat("Geometry check passed.\n")
