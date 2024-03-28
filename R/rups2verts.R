@@ -8,6 +8,9 @@ rups2verts <- function(sf_object) {
   # Check that the object is line-type
   check_geometry_type(sf_object, "line")
 
+  # Check that the object is in 4326 (required for this application)
+  check_crs(sf_object)
+
   # Add the RUP_ID field if it doesn't exist
   if (!"RUP_ID" %in% names(sf_object)) {
     sf_object$RUP_ID <- seq_len(nrow(sf_object))
