@@ -2,6 +2,7 @@
 # ECSprep
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/asarmy/ECSprep/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/asarmy/ECSprep/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of ECSprep is to ...
@@ -11,7 +12,7 @@ The goal of ECSprep is to ...
 You can install the development version of ECSprep like so:
 
 ``` r
-# FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
+remotes::install_github("asarmy/ECSprep")
 ```
 
 ## Example
