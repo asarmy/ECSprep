@@ -2,7 +2,8 @@
 % Please edit documentation in R/project_to_4326.R
 \name{project_to_4326}
 \alias{project_to_4326}
-\title{Check the coordinate reference system of an sf object; it should be EPSG:4326; covert if needed.}
+\title{Check the coordinate reference system of an sf object; it should be
+EPSG:4326; covert if needed.}
 \usage{
 project_to_4326(sf_object)
 }
@@ -13,5 +14,6 @@ project_to_4326(sf_object)
 An sf object in EPSG:4326.
 }
 \description{
-Check the coordinate reference system of an sf object; it should be EPSG:4326; covert if needed.
+Check the coordinate reference system of an sf object; it should be
+EPSG:4326; covert if needed.
 }
