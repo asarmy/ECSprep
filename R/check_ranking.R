@@ -1,6 +1,6 @@
 #' Check that the values in the Rank attribute are valid; allowable values are
-#' None, Primary, Principal, Secondary, Distributed. Note that Principal and
-#' Distributed will be replaced with Primary and Secondary, respectively, for
+#' None, Primary, Principal, Secondary, Distributed. Note that Primary and
+#' Secondary will be replaced with Principal and Distributed, respectively, for
 #' standardization purposes.
 #'
 #' @param sf_object The sf object.
@@ -14,8 +14,8 @@ check_ranking <- function(sf_object) {
 
   sf_object <- sf_object %>%
     dplyr::mutate(Rank = dplyr::case_when(
-      Rank == "Principal" ~ "Primary",
-      Rank == "Distributed" ~ "Secondary",
+      Rank == "Primary" ~ "Principal",
+      Rank == "Secondary" ~ "Distributed",
       TRUE ~ as.character(Rank)
     ))
 
@@ -24,13 +24,15 @@ check_ranking <- function(sf_object) {
   }
 
   # Check for invalid entries
-  valid_options <- c("None", "Primary", "Secondary")
+  valid_options <- c("None", "Principal", "Distributed")
   invalid_entries <- !sf_object$Rank %in% valid_options
 
   if (any(invalid_entries)) {
     invalid_values <- unique(sf_object$Rank[invalid_entries])
     stop("Error: The following invalid `Rank` values were found: ",
          paste(invalid_values, collapse = ", "), ".")
+  } else {
+    cat("Rank check passed.\n")
   }
 
   return(sf_object)
