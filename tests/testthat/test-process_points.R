@@ -1,13 +1,16 @@
-test_that("the ruptures are converted to vertices correctly", {
-  # Load the ruptures shapefile and covnert it to a vertices data frame
-  sf_object <- sf::st_read(test_path("data", "neftegorsk_ruptures_epsg4326.shp"), quiet = TRUE)
-  test_result <- rups2verts(sf_object)
+test_that("the points are formatted correctly", {
+  # Load the points shapefile and project it to EPSG:4326
+  sf_object <- sf::st_read(test_path("data", "galway_lake_sites_epsg32611.shp"), quiet = TRUE)
+  sf_object <- sf::st_transform(sf_object, crs = 4326)
+
+  # Format the results into the data frame
+  test_result <- process_points(sf_object)
 
   # Load the expected vertices data frame generated in ArcGIS
-  expected_result <- read.csv(test_path("data", "neftegorsk_vertices.csv"))
+  expected_result <- read.csv(test_path("data", "galway_lake_sites_epsg4326.csv"))
 
   # Define the columns to check
-  columns <- c("RUP_ID", "NODE_ID", "Latitude", "Longitude")
+  columns <- c("PT_ID",  "Latitude", "Longitude")
 
   # Check the columns exist in both data frames
   expect_true(all(columns %in% names(test_result)))

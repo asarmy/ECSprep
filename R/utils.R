@@ -129,18 +129,9 @@ rups2verts <- function(sf_object) {
   # Check that the object is line-type
   check_geometry_type(sf_object, "line")
 
-  # Convert the object to EPSG:4326 if it is not already in that CRS
-  sf_object <- project_to_4326(sf_object)
-
   # Add the RUP_ID field if it doesn't exist
   if (!"RUP_ID" %in% names(sf_object)) {
     sf_object$RUP_ID <- seq_len(nrow(sf_object))
-  }
-
-  # Add the Rank field if it doesn't exist
-  if (!"Rank" %in% names(sf_object)) {
-    sf_object$Rank <- "None"
-    warning("Rank attribute is missing. It was added with default values of `None`.\n")
   }
 
   # Convert to line work to vertices
@@ -158,3 +149,34 @@ rups2verts <- function(sf_object) {
 
   return(df_vertices)
 }
+
+
+#' Convert measurement sites to format for the Lavrentiadis & Abrahamson ECS tool.
+#'
+#' @param sf_object The sf object with POINT geometry.
+#'
+#' @return A data frame with the points .
+#' @keywords internal
+#' @export
+process_points <- function(sf_object) {
+  # Check that the object is point-type
+  check_geometry_type(sf_object, "point")
+
+  # Add the PT_ID field if it doesn't exist
+  if (!"PT_ID" %in% names(sf_object)) {
+    sf_object$PT_ID <- seq_len(nrow(sf_object))
+  }
+
+  # Add Latitude, Longitude columns
+  # Clean up: drop geometry field, convert to data frame
+  df_pts <- sf_object %>%
+    dplyr::mutate(Latitude = sf::st_coordinates(.)[, "Y"],
+                  Longitude = sf::st_coordinates(.)[, "X"]) %>%
+    sf::st_set_geometry(NULL) %>%
+    as.data.frame()
+
+  return(df_pts)
+}
+
+
+
