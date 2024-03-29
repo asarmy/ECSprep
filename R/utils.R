@@ -155,7 +155,7 @@ rups2verts <- function(sf_object) {
 #'
 #' @param sf_object The sf object with POINT geometry.
 #'
-#' @return A data frame with the points .
+#' @return A data frame with the points.
 #' @keywords internal
 #' @export
 process_points <- function(sf_object) {
@@ -177,6 +177,4 @@ process_points <- function(sf_object) {
 
   return(df_pts)
 }
-
-
 
