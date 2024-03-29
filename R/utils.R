@@ -5,6 +5,7 @@
 #'
 #' @return None; the function will stop execution and throw an error if the CRS
 #'   of sf_object is not 4326.
+#' @keywords internal
 #' @export
 check_crs <- function(sf_object) {
 
@@ -26,6 +27,7 @@ check_crs <- function(sf_object) {
 #'
 #' @return None; the function will stop execution and throw an error if the
 #'   geometry type of sf_object does not match the expected type.
+#' @keywords internal
 #' @export
 check_geometry_type <- function(sf_object, geom_category) {
   # Define mapping from simple types to specific geometry types
@@ -63,6 +65,7 @@ check_geometry_type <- function(sf_object, geom_category) {
 #'
 #' @return The sf object with rank cleaned-up as needed. The function will stop
 #'   execution and throw an error if an invalid Rank is found.
+#' @keywords internal
 #' @export
 check_ranking <- function(sf_object) {
   # Standardizing rank nomenclature; update ranks and track changes
@@ -101,6 +104,7 @@ check_ranking <- function(sf_object) {
 #' @param sf_object The sf object.
 #'
 #' @return An sf object in EPSG:4326.
+#' @keywords internal
 #' @export
 project_to_4326 <- function(sf_object) {
   crs <- sf::st_crs(sf_object)$epsg
@@ -119,6 +123,7 @@ project_to_4326 <- function(sf_object) {
 #' @param sf_object The sf object with LINESTRING geometry.
 #'
 #' @return A data frame with the rupture lines converted to vertices.
+#' @keywords internal
 #' @export
 rups2verts <- function(sf_object) {
   # Check that the object is line-type

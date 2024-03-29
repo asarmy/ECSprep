@@ -15,3 +15,4 @@ A data frame with the rupture lines converted to vertices.
 \description{
 Convert rupture line work to vertex format for the Lavrentiadis & Abrahamson ECS tool.
 }
+\keyword{internal}

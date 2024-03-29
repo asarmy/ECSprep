@@ -17,3 +17,4 @@ An sf object in EPSG:4326.
 Check the coordinate reference system of an sf object; it should be
 EPSG:4326; covert if needed.
 }
+\keyword{internal}

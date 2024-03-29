@@ -19,3 +19,4 @@ geometry type of sf_object does not match the expected type.
 \description{
 Check the geometry of an sf object.
 }
+\keyword{internal}

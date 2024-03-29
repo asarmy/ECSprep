@@ -18,3 +18,4 @@ of sf_object is not 4326.
 Check the coordinate reference system of an sf object. It should be 4326 for
 our application.
 }
+\keyword{internal}
