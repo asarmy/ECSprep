@@ -24,9 +24,4 @@ tailored for preparing input data for the Lavrentiadis & Abrahamson ECS tool
 by structuring the 'sf' object's line work into a vertex format in a data
 frame.
 }
-\examples{
-Assuming 'lines_sf' is an sf object with LINESTRING geometry
-vertices_df <- rups2verts(lines_sf)
-
-}
 \keyword{internal}

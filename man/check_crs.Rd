@@ -20,9 +20,4 @@ to EPSG:4326, which is required for specific geographical applications. This
 CRS corresponds to WGS 84, a global geographic coordinate system. The
 function halts execution with an error if the CRS is not EPSG:4326.
 }
-\examples{
-Assuming you have an 'sf' object named 'data':
-check_crs(data)
-
-}
 \keyword{internal}

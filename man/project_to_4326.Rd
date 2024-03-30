@@ -19,9 +19,4 @@ Checks the coordinate reference system (CRS) of an 'sf' object and transforms
 it to EPSG:4326 if it is not already in this CRS. EPSG:4326 corresponds to
 WGS 84, a widely used geographical coordinate system.
 }
-\examples{
-Assuming 'geo_sf' is your sf object not in EPSG:4326
-geo_sf_4326 <- project_to_4326(geo_sf)
-
-}
 \keyword{internal}

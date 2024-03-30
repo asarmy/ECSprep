@@ -27,9 +27,3 @@ shapefile's CRS to EPSG:4326, adds a default 'Rank' field if missing, and
 formats the data for ECS tool input. Output is saved as a CSV file in the
 specified or default directory.
 }
-\examples{
-create_ecs_input(file.path("path", "to", "your_ruptures.shp"), "line")
-create_ecs_input(file.path("path", "to", "your_measurements.shp"), "point", file.path("path", "to", "output"))
-
-}
-\keyword{internal}
