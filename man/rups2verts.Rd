@@ -8,7 +8,7 @@ attributes for the ECS Tool}
 rups2verts(sf_object)
 }
 \arguments{
-\item{sf_object}{An \code{sf} object, expected to contain LINESTRING geometries.}
+\item{sf_object}{An 'sf' object, expected to contain LINESTRING geometries.}
 }
 \value{
 Returns a data frame where each row represents a vertex from the
@@ -17,15 +17,15 @@ original LINESTRING geometries. The data frame includes columns for RUP_ID
 Latitude/Longitude coordinates.
 }
 \description{
-Transforms an \code{sf} object containing LINESTRING geometries into a data frame
+Transforms an 'sf' object containing LINESTRING geometries into a data frame
 of vertices. Each vertex is assigned a unique node ID within its rupture line
 (RUP_ID) and includes latitude and longitude coordinates. This function is
 tailored for preparing input data for the Lavrentiadis & Abrahamson ECS tool
-by structuring the \code{sf} object's line work into a vertex format in a data
+by structuring the 'sf' object's line work into a vertex format in a data
 frame.
 }
 \examples{
-# Assuming `lines_sf` is an sf object with LINESTRING geometry
+# Assuming 'lines_sf' is an sf object with LINESTRING geometry
 vertices_df <- rups2verts(lines_sf)
 
 }

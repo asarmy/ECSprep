@@ -7,20 +7,20 @@
 project_to_4326(sf_object)
 }
 \arguments{
-\item{sf_object}{An \code{sf} object representing spatial features. The function
+\item{sf_object}{An 'sf' object representing spatial features. The function
 checks and, if necessary, converts the CRS of this object to EPSG:4326.}
 }
 \value{
-Returns the \code{sf} object in the EPSG:4326 coordinate reference system.
+Returns the 'sf' object in the EPSG:4326 coordinate reference system.
 If the original object is already in EPSG:4326, it is returned unchanged.
 }
 \description{
-Checks the coordinate reference system (CRS) of an \code{sf} object and transforms
+Checks the coordinate reference system (CRS) of an 'sf' object and transforms
 it to EPSG:4326 if it is not already in this CRS. EPSG:4326 corresponds to
 WGS 84, a widely used geographical coordinate system.
 }
 \examples{
-# Assuming `geo_sf` is your sf object not in EPSG:4326
+# Assuming 'geo_sf' is your sf object not in EPSG:4326
 geo_sf_4326 <- project_to_4326(geo_sf)
 
 }

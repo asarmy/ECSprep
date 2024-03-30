@@ -7,21 +7,21 @@
 check_crs(sf_object)
 }
 \arguments{
-\item{sf_object}{The \code{sf} object to check, representing geographical features
+\item{sf_object}{The 'sf' object to check, representing geographical features
 and their attributes.}
 }
 \value{
 Does not return a value but halts execution with an error if the CRS
-of \code{sf_object} is not EPSG:4326.
+of 'sf_object' is not EPSG:4326.
 }
 \description{
-Verifies that the coordinate reference system (CRS) of an \code{sf} object is set
+Verifies that the coordinate reference system (CRS) of an 'sf' object is set
 to EPSG:4326, which is required for specific geographical applications. This
 CRS corresponds to WGS 84, a global geographic coordinate system. The
 function halts execution with an error if the CRS is not EPSG:4326.
 }
 \examples{
-# Assuming you have an `sf` object named `data`:
+# Assuming you have an 'sf' object named 'data':
 # check_crs(data)
 
 }

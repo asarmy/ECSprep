@@ -1,18 +1,18 @@
 #' Check CRS of an sf Object
 #'
-#' Verifies that the coordinate reference system (CRS) of an `sf` object is set
+#' Verifies that the coordinate reference system (CRS) of an 'sf' object is set
 #' to EPSG:4326, which is required for specific geographical applications. This
 #' CRS corresponds to WGS 84, a global geographic coordinate system. The
 #' function halts execution with an error if the CRS is not EPSG:4326.
 #'
-#' @param sf_object The `sf` object to check, representing geographical features
+#' @param sf_object The 'sf' object to check, representing geographical features
 #'   and their attributes.
 #'
 #' @return Does not return a value but halts execution with an error if the CRS
-#'   of `sf_object` is not EPSG:4326.
+#'   of 'sf_object' is not EPSG:4326.
 #'
 #' @examples
-#' # Assuming you have an `sf` object named `data`:
+#' # Assuming you have an 'sf' object named 'data':
 #' # check_crs(data)
 #'
 #' @keywords internal
@@ -31,21 +31,21 @@ check_crs <- function(sf_object) {
 
 #' Check Geometry Type of an sf Object
 #'
-#' Validates whether the geometry of an `sf` object matches the specified
+#' Validates whether the geometry of an 'sf' object matches the specified
 #' category. This function is designed to ensure that spatial operations are
 #' performed on the appropriate geometry types, specifically 'line' and 'point'
 #' geometries.
 #'
-#' @param sf_object An `sf` object, which represents spatial features.
+#' @param sf_object An 'sf' object, which represents spatial features.
 #' @param geom_category A string indicating the expected geometry category.
 #'   Accepts 'line' for LINESTRING and MULTILINESTRING geometries, or 'point'
 #'   for POINT and MULTIPOINT geometries.
 #'
 #' @return Does not return a value but halts execution with an error message if
-#'   the `sf_object`'s geometry does not match the expected category.
+#'   the 'sf_object''s geometry does not match the expected category.
 #'
 #' @examples
-#' # Assuming `sf_lines` and `sf_points` are sf objects with LINESTRING and
+#' # Assuming 'sf_lines' and 'sf_points' are sf objects with LINESTRING and
 #' # POINT geometries, respectively:
 #' check_geometry_type(sf_lines, "line")
 #' check_geometry_type(sf_points, "point")
@@ -80,21 +80,21 @@ check_geometry_type <- function(sf_object, geom_category) {
 
 
 
-#' Standardize and Validate `Rank` Attribute in an sf Object
+#' Standardize and Validate 'Rank' Attribute in an sf Object
 #'
-#' Ensures that the `Rank` attribute of an `sf` object contains only valid
+#' Ensures that the 'Rank' attribute of an 'sf' object contains only valid
 #' values and standardizes them by replacing "Primary" with "Principal" and
-#' "Secondary" with "Distributed". It checks for any invalid `Rank` values and
+#' "Secondary" with "Distributed". It checks for any invalid 'Rank' values and
 #' stops execution with an error if any are found.
 #'
-#' @param sf_object An `sf` object with a `Rank` attribute.
+#' @param sf_object An 'sf' object with a 'Rank' attribute.
 #'
-#' @return Returns the modified `sf` object with the `Rank` attribute
-#'   standardized and validated. If invalid `Rank` values are present, execution
+#' @return Returns the modified 'sf' object with the 'Rank' attribute
+#'   standardized and validated. If invalid 'Rank' values are present, execution
 #'   is halted with an error message.
 #'
 #' @examples
-#' # Assuming `sf_obj` is an existing `sf` object with a `Rank` column:
+#' # Assuming 'sf_obj' is an existing 'sf' object with a 'Rank' column:
 #' sf_obj <- check_ranking(sf_obj)
 #'
 #' @keywords internal
@@ -138,18 +138,18 @@ check_ranking <- function(sf_object) {
 
 #' Transform sf Object to EPSG:4326 CRS
 #'
-#' Checks the coordinate reference system (CRS) of an `sf` object and transforms
+#' Checks the coordinate reference system (CRS) of an 'sf' object and transforms
 #' it to EPSG:4326 if it is not already in this CRS. EPSG:4326 corresponds to
 #' WGS 84, a widely used geographical coordinate system.
 #'
-#' @param sf_object An `sf` object representing spatial features. The function
+#' @param sf_object An 'sf' object representing spatial features. The function
 #'   checks and, if necessary, converts the CRS of this object to EPSG:4326.
 #'
-#' @return Returns the `sf` object in the EPSG:4326 coordinate reference system.
+#' @return Returns the 'sf' object in the EPSG:4326 coordinate reference system.
 #'   If the original object is already in EPSG:4326, it is returned unchanged.
 #'
 #' @examples
-#' # Assuming `geo_sf` is your sf object not in EPSG:4326
+#' # Assuming 'geo_sf' is your sf object not in EPSG:4326
 #' geo_sf_4326 <- project_to_4326(geo_sf)
 #'
 #' @keywords internal
@@ -169,14 +169,14 @@ project_to_4326 <- function(sf_object) {
 #' Convert rupture line work to a data frame of vertices with necessary
 #' attributes for the ECS Tool
 #'
-#' Transforms an `sf` object containing LINESTRING geometries into a data frame
+#' Transforms an 'sf' object containing LINESTRING geometries into a data frame
 #' of vertices. Each vertex is assigned a unique node ID within its rupture line
 #' (RUP_ID) and includes latitude and longitude coordinates. This function is
 #' tailored for preparing input data for the Lavrentiadis & Abrahamson ECS tool
-#' by structuring the `sf` object's line work into a vertex format in a data
+#' by structuring the 'sf' object's line work into a vertex format in a data
 #' frame.
 #'
-#' @param sf_object An `sf` object, expected to contain LINESTRING geometries.
+#' @param sf_object An 'sf' object, expected to contain LINESTRING geometries.
 #'
 #' @return Returns a data frame where each row represents a vertex from the
 #'   original LINESTRING geometries. The data frame includes columns for RUP_ID
@@ -184,7 +184,7 @@ project_to_4326 <- function(sf_object) {
 #'   Latitude/Longitude coordinates.
 #'
 #' @examples
-#' # Assuming `lines_sf` is an sf object with LINESTRING geometry
+#' # Assuming 'lines_sf' is an sf object with LINESTRING geometry
 #' vertices_df <- rups2verts(lines_sf)
 #'
 #' @keywords internal
@@ -218,24 +218,24 @@ rups2verts <- function(sf_object) {
 #' Convert measurement sites to a data frame with necessary attributes for the
 #' ECS Tool
 #'
-#' Transforms an `sf` object containing POINT geometries and associated
+#' Transforms an 'sf' object containing POINT geometries and associated
 #' displacement measurements into a data frame. This function is tailored for
 #' preparing input data for the Lavrentiadis & Abrahamson ECS tool .
 #'
-#' @param sf_object An `sf` object, expected to contain POINT geometries
+#' @param sf_object An 'sf' object, expected to contain POINT geometries
 #'   representing measurement sites.
-#' @param displ_meas_col The name of the column within `sf_object` that contains
+#' @param displ_meas_col The name of the column within 'sf_object' that contains
 #'   fault displacement measurements. This column is converted to numeric, if
 #'   not already, and its values are used to populate the 'displacement' column
 #'   in the output.
 #'
-#' @return Returns a data frame derived from the input `sf` object. The data
+#' @return Returns a data frame derived from the input 'sf' object. The data
 #'   frame includes the original data (except for displacement values that are
 #'   negative, NaN, or NA), a renamed 'displacement' column, point IDs
 #'   ('PT_ID'), and coordinates ('Latitude', 'Longitude').
 #'
 #' @examples
-#' # Assuming `point_sf` is an sf object with POINT geometry and a 'measure' column:
+#' # Assuming 'point_sf' is an sf object with POINT geometry and a 'measure' column:
 #' processed_df <- process_points(point_sf, 'measure')
 #'
 #' @keywords internal

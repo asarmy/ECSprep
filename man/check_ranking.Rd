@@ -2,26 +2,26 @@
 % Please edit documentation in R/utils.R
 \name{check_ranking}
 \alias{check_ranking}
-\title{Standardize and Validate \code{Rank} Attribute in an sf Object}
+\title{Standardize and Validate 'Rank' Attribute in an sf Object}
 \usage{
 check_ranking(sf_object)
 }
 \arguments{
-\item{sf_object}{An \code{sf} object with a \code{Rank} attribute.}
+\item{sf_object}{An 'sf' object with a 'Rank' attribute.}
 }
 \value{
-Returns the modified \code{sf} object with the \code{Rank} attribute
-standardized and validated. If invalid \code{Rank} values are present, execution
+Returns the modified 'sf' object with the 'Rank' attribute
+standardized and validated. If invalid 'Rank' values are present, execution
 is halted with an error message.
 }
 \description{
-Ensures that the \code{Rank} attribute of an \code{sf} object contains only valid
+Ensures that the 'Rank' attribute of an 'sf' object contains only valid
 values and standardizes them by replacing "Primary" with "Principal" and
-"Secondary" with "Distributed". It checks for any invalid \code{Rank} values and
+"Secondary" with "Distributed". It checks for any invalid 'Rank' values and
 stops execution with an error if any are found.
 }
 \examples{
-# Assuming `sf_obj` is an existing `sf` object with a `Rank` column:
+# Assuming 'sf_obj' is an existing 'sf' object with a 'Rank' column:
 sf_obj <- check_ranking(sf_obj)
 
 }

@@ -8,27 +8,27 @@ ECS Tool}
 process_points(sf_object, displ_meas_col)
 }
 \arguments{
-\item{sf_object}{An \code{sf} object, expected to contain POINT geometries
+\item{sf_object}{An 'sf' object, expected to contain POINT geometries
 representing measurement sites.}
 
-\item{displ_meas_col}{The name of the column within \code{sf_object} that contains
+\item{displ_meas_col}{The name of the column within 'sf_object' that contains
 fault displacement measurements. This column is converted to numeric, if
 not already, and its values are used to populate the 'displacement' column
 in the output.}
 }
 \value{
-Returns a data frame derived from the input \code{sf} object. The data
+Returns a data frame derived from the input 'sf' object. The data
 frame includes the original data (except for displacement values that are
 negative, NaN, or NA), a renamed 'displacement' column, point IDs
 ('PT_ID'), and coordinates ('Latitude', 'Longitude').
 }
 \description{
-Transforms an \code{sf} object containing POINT geometries and associated
+Transforms an 'sf' object containing POINT geometries and associated
 displacement measurements into a data frame. This function is tailored for
 preparing input data for the Lavrentiadis & Abrahamson ECS tool .
 }
 \examples{
-# Assuming `point_sf` is an sf object with POINT geometry and a 'measure' column:
+# Assuming 'point_sf' is an sf object with POINT geometry and a 'measure' column:
 processed_df <- process_points(point_sf, 'measure')
 
 }

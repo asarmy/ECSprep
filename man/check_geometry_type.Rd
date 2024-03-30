@@ -7,7 +7,7 @@
 check_geometry_type(sf_object, geom_category)
 }
 \arguments{
-\item{sf_object}{An \code{sf} object, which represents spatial features.}
+\item{sf_object}{An 'sf' object, which represents spatial features.}
 
 \item{geom_category}{A string indicating the expected geometry category.
 Accepts 'line' for LINESTRING and MULTILINESTRING geometries, or 'point'
@@ -15,16 +15,16 @@ for POINT and MULTIPOINT geometries.}
 }
 \value{
 Does not return a value but halts execution with an error message if
-the \code{sf_object}'s geometry does not match the expected category.
+the 'sf_object''s geometry does not match the expected category.
 }
 \description{
-Validates whether the geometry of an \code{sf} object matches the specified
+Validates whether the geometry of an 'sf' object matches the specified
 category. This function is designed to ensure that spatial operations are
 performed on the appropriate geometry types, specifically 'line' and 'point'
 geometries.
 }
 \examples{
-# Assuming `sf_lines` and `sf_points` are sf objects with LINESTRING and
+# Assuming 'sf_lines' and 'sf_points' are sf objects with LINESTRING and
 # POINT geometries, respectively:
 check_geometry_type(sf_lines, "line")
 check_geometry_type(sf_points, "point")
