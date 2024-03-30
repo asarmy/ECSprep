@@ -2,17 +2,22 @@
 % Please edit documentation in R/utils.R
 \name{process_points}
 \alias{process_points}
-\title{Convert measurement sites to format for the Lavrentiadis & Abrahamson ECS tool.}
+\title{Convert measurement sites to format for the Lavrentiadis & Abrahamson ECS
+tool.}
 \usage{
-process_points(sf_object)
+process_points(sf_object, displ_meas_col)
 }
 \arguments{
 \item{sf_object}{The sf object with POINT geometry.}
+
+\item{displ_meas_col}{A string for the column name that
+contains the fault displacement measurements.}
 }
 \value{
-A data frame with the points .
+A data frame with the points.
 }
 \description{
-Convert measurement sites to format for the Lavrentiadis & Abrahamson ECS tool.
+Convert measurement sites to format for the Lavrentiadis & Abrahamson ECS
+tool.
 }
 \keyword{internal}

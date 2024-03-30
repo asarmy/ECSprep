@@ -4,13 +4,13 @@ test_that("the points are formatted correctly", {
   sf_object <- sf::st_transform(sf_object, crs = 4326)
 
   # Format the results into the data frame
-  test_result <- process_points(sf_object)
+  test_result <- process_points(sf_object, "displ_m")
 
   # Load the expected vertices data frame generated in ArcGIS
   expected_result <- read.csv(test_path("data", "galway_lake_sites_epsg4326.csv"))
 
   # Define the columns to check
-  columns <- c("PT_ID",  "Latitude", "Longitude")
+  columns <- c("PT_ID",  "Latitude", "Longitude", "displacement")
 
   # Check the columns exist in both data frames
   expect_true(all(columns %in% names(test_result)))
@@ -24,3 +24,46 @@ test_that("the points are formatted correctly", {
                  info = paste("Column values not within tolerance for", col))
   }
 })
+
+
+test_that("an error is thrown when the displacement column is not found", {
+  expect_error({
+    sf_object <- sf::st_read(test_path("data", "galway_lake_sites_epsg32611.shp"), quiet = TRUE)
+    process_points(sf_object, "meow")
+  })
+})
+
+
+test_that("negative displacement values, e.g. -999, are dropped", {
+  # Load the points shapefile and project it to EPSG:4326
+  sf_object <- sf::st_read(test_path("data", "galway_lake_sites_epsg32611.shp"), quiet = TRUE)
+
+  # Make one of the measurements -999
+  sf_object[2, "displ_m"] <- -999
+  expect_warning({process_points(sf_object, "displ_m")},
+                 "Rows with negative values in 'displ_m' have been removed.")
+})
+
+
+test_that("NaN displacement values are dropped", {
+  # Load the points shapefile and project it to EPSG:4326
+  sf_object <- sf::st_read(test_path("data", "galway_lake_sites_epsg32611.shp"), quiet = TRUE)
+
+  # Make one of the measurements NaN
+  sf_object[2, "displ_m"] <- NaN
+  expect_warning({process_points(sf_object, "displ_m")},
+                 "Rows with NaN values in 'displ_m' have been removed.")
+})
+
+
+test_that("NA displacement values are dropped", {
+  # Load the points shapefile and project it to EPSG:4326
+  sf_object <- sf::st_read(test_path("data", "galway_lake_sites_epsg32611.shp"), quiet = TRUE)
+
+  # Make one of the measurements NA
+  sf_object[2, "displ_m"] <- NA
+  expect_warning({process_points(sf_object, "displ_m")},
+                 "Rows with NA values in 'displ_m' have been removed.")
+})
+
+

@@ -12,7 +12,7 @@ check_crs <- function(sf_object) {
   crs <- sf::st_crs(sf_object)
 
   if (is.null(crs$epsg) || crs$epsg != 4326) {
-    stop("Error: Coordinate reference system check failed. The sf object's CRS must EPSG:4326.")
+    stop("Error: Coordinate reference system check failed. The sf object's CRS must EPSG:4326.\n")
   } else {
     cat("Coordinate reference system check passed.\n")
   }
@@ -37,7 +37,7 @@ check_geometry_type <- function(sf_object, geom_category) {
   # Check if the specified category is valid
   if (!tolower(geom_category) %in% names(geom_type_mapping)) {
     stop("Error: Invalid geometry category. Please use one of the following: ",
-         paste(names(geom_type_mapping), collapse = ", "), ".")
+         paste(names(geom_type_mapping), collapse = ", "), ".\n")
   }
 
   # Retrieve the valid types for the specified category
@@ -48,8 +48,9 @@ check_geometry_type <- function(sf_object, geom_category) {
 
   if (!all(geom_types %in% valid_types)) {
     stop(paste("Error: Geometry check failed. The sf object's geometry type must be one of:",
-               paste(valid_types,collapse = ", "), ". Found types:",
-               paste(geom_types, collapse = ", "), "."))
+               paste(valid_types,collapse = ", "), ".
+               Found types:",
+               paste(geom_types, collapse = ", "), ".\n"))
   }
 
   cat("Geometry check passed.\n")
@@ -89,7 +90,7 @@ check_ranking <- function(sf_object) {
   if (any(invalid_entries)) {
     invalid_values <- unique(sf_object$Rank[invalid_entries])
     stop("Error: The following invalid `Rank` values were found: ",
-         paste(invalid_values, collapse = ", "), ".")
+         paste(invalid_values, collapse = ", "), ".\n")
   } else {
     cat("Rank check passed.\n")
   }
@@ -151,16 +152,59 @@ rups2verts <- function(sf_object) {
 }
 
 
-#' Convert measurement sites to format for the Lavrentiadis & Abrahamson ECS tool.
+#' Convert measurement sites to format for the Lavrentiadis & Abrahamson ECS
+#' tool.
 #'
 #' @param sf_object The sf object with POINT geometry.
+#' @param displ_meas_col A string for the column name that
+#'   contains the fault displacement measurements.
 #'
 #' @return A data frame with the points.
 #' @keywords internal
 #' @export
-process_points <- function(sf_object) {
-  # Check that the object is point-type
+process_points <- function(sf_object, displ_meas_col) {
+  # Ensure the geometry is of type "point"
   check_geometry_type(sf_object, "point")
+
+  # Check that the specified displacement measurement field exists
+  if (!displ_meas_col %in% names(sf_object)) {
+    stop("Error: The specified displacement measurement column could not be found: ", displ_meas_col, "\n")
+  }
+
+  # Convert displacement column to numeric if it's not already
+  if (!is.numeric(sf_object[[displ_meas_col]])) {
+    sf_object[[displ_meas_col]] <- as.numeric(as.character(sf_object[[displ_meas_col]]))
+
+    if (any(is.na(sf_object[[displ_meas_col]]))) {
+      warning(paste0("NAs introduced by coercion; some values in '", displ_meas_col, "' could not be converted to numeric.\n"))
+    }
+  }
+
+  # Drop rows with negative values in displacement column
+  if (any(sf_object[[displ_meas_col]] < 0, na.rm = TRUE)) {
+    sf_object <- sf_object[sf_object[[displ_meas_col]] >= 0, ]
+
+    warning(paste0("Rows with negative values in '", displ_meas_col, "' have been removed.\n"))
+  }
+
+  # Drop rows with NaN values in displacement column
+  if (any(is.nan(sf_object[[displ_meas_col]]), na.rm = TRUE)) {
+    # Filter out NaN values
+    sf_object <- sf_object[!is.nan(sf_object[[displ_meas_col]]), ]
+
+    warning(paste0("Rows with NaN values in '", displ_meas_col, "' have been removed.\n"))
+  }
+
+  # Drop rows with NA values in displacement column
+  if (any(is.na(sf_object[[displ_meas_col]]), na.rm = TRUE)) {
+    # Filter out NA values
+    sf_object <- sf_object[!is.na(sf_object[[displ_meas_col]]), ]
+
+    warning(paste0("Rows with NA values in '", displ_meas_col, "' have been removed.\n"))
+  }
+
+  # Rename the displacement column for standardization
+  sf_object$displacement <- sf_object[[displ_meas_col]]
 
   # Add the PT_ID field if it doesn't exist
   if (!"PT_ID" %in% names(sf_object)) {
@@ -168,13 +212,13 @@ process_points <- function(sf_object) {
   }
 
   # Add Latitude, Longitude columns
-  # Clean up: drop geometry field, convert to data frame
+  # Clean up: drop geometry field, drop original displ field, convert to data frame
   df_pts <- sf_object %>%
     dplyr::mutate(Latitude = sf::st_coordinates(.)[, "Y"],
                   Longitude = sf::st_coordinates(.)[, "X"]) %>%
     sf::st_set_geometry(NULL) %>%
+    dplyr::select(-displ_meas_col) %>%
     as.data.frame()
 
   return(df_pts)
 }
-
