@@ -21,7 +21,7 @@ values and standardizes them by replacing "Primary" with "Principal" and
 stops execution with an error if any are found.
 }
 \examples{
-# Assuming 'sf_obj' is an existing 'sf' object with a 'Rank' column:
+Assuming 'sf_obj' is an existing 'sf' object with a 'Rank' column:
 sf_obj <- check_ranking(sf_obj)
 
 }

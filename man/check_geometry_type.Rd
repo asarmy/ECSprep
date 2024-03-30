@@ -24,8 +24,8 @@ performed on the appropriate geometry types, specifically 'line' and 'point'
 geometries.
 }
 \examples{
-# Assuming 'sf_lines' and 'sf_points' are sf objects with LINESTRING and
-# POINT geometries, respectively:
+Assuming 'sf_lines' and 'sf_points' are sf objects with LINESTRING and
+POINT geometries, respectively:
 check_geometry_type(sf_lines, "line")
 check_geometry_type(sf_points, "point")
 

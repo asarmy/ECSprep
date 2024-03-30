@@ -28,7 +28,7 @@ displacement measurements into a data frame. This function is tailored for
 preparing input data for the Lavrentiadis & Abrahamson ECS tool .
 }
 \examples{
-# Assuming 'point_sf' is an sf object with POINT geometry and a 'measure' column:
+Assuming 'point_sf' is an sf object with POINT geometry and a 'measure' column:
 processed_df <- process_points(point_sf, 'measure')
 
 }
