@@ -11,10 +11,6 @@
 #' @return Does not return a value but halts execution with an error if the CRS
 #'   of 'sf_object' is not EPSG:4326.
 #'
-#' @examples
-#' Assuming you have an 'sf' object named 'data':
-#' check_crs(data)
-#'
 #' @keywords internal
 #' @export
 check_crs <- function(sf_object) {
@@ -43,12 +39,6 @@ check_crs <- function(sf_object) {
 #'
 #' @return Does not return a value but halts execution with an error message if
 #'   the 'sf_object''s geometry does not match the expected category.
-#'
-#' @examples
-#' Assuming 'sf_lines' and 'sf_points' are sf objects with LINESTRING and
-#' POINT geometries, respectively:
-#' check_geometry_type(sf_lines, "line")
-#' check_geometry_type(sf_points, "point")
 #'
 #' @keywords internal
 #' @export
@@ -92,10 +82,6 @@ check_geometry_type <- function(sf_object, geom_category) {
 #' @return Returns the modified 'sf' object with the 'Rank' attribute
 #'   standardized and validated. If invalid 'Rank' values are present, execution
 #'   is halted with an error message.
-#'
-#' @examples
-#' Assuming 'sf_obj' is an existing 'sf' object with a 'Rank' column:
-#' sf_obj <- check_ranking(sf_obj)
 #'
 #' @keywords internal
 #' @export
@@ -148,10 +134,6 @@ check_ranking <- function(sf_object) {
 #' @return Returns the 'sf' object in the EPSG:4326 coordinate reference system.
 #'   If the original object is already in EPSG:4326, it is returned unchanged.
 #'
-#' @examples
-#' Assuming 'geo_sf' is your sf object not in EPSG:4326
-#' geo_sf_4326 <- project_to_4326(geo_sf)
-#'
 #' @keywords internal
 #' @export
 project_to_4326 <- function(sf_object) {
@@ -182,10 +164,6 @@ project_to_4326 <- function(sf_object) {
 #'   original LINESTRING geometries. The data frame includes columns for RUP_ID
 #'   (rupture line ID), NODE_ID (node order within each RUP_ID), and
 #'   Latitude/Longitude coordinates.
-#'
-#' @examples
-#' Assuming 'lines_sf' is an sf object with LINESTRING geometry
-#' vertices_df <- rups2verts(lines_sf)
 #'
 #' @keywords internal
 #' @export
@@ -233,10 +211,6 @@ rups2verts <- function(sf_object) {
 #'   frame includes the original data (except for displacement values that are
 #'   negative, NaN, or NA), a renamed 'displacement' column, point IDs
 #'   ('PT_ID'), and coordinates ('Latitude', 'Longitude').
-#'
-#' @examples
-#' Assuming 'point_sf' is an sf object with POINT geometry and a 'measure' column:
-#' processed_df <- process_points(point_sf, 'measure')
 #'
 #' @keywords internal
 #' @export
