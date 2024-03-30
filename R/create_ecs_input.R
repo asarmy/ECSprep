@@ -15,12 +15,8 @@
 #'
 #' @return Outputs a CSV file to the specified directory and prints the file
 #'   location. Does not return any value from the function itself.
-#' @export
-#' @examples
-#' create_ecs_input(file.path("path", "to", "your_ruptures.shp"), "line")
-#' create_ecs_input(file.path("path", "to", "your_measurements.shp"), "point", file.path("path", "to", "output"))
 #'
-#' @keywords internal
+#' @export
 create_ecs_input <- function(in_filepath, geometry_type, output_folder = NULL) {
 
   # Check that the input filepath is correct
