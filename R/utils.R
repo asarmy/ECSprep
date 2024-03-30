@@ -1,42 +1,66 @@
-#' Check the coordinate reference system of an sf object. It should be 4326 for
-#' our application.
+#' Check CRS of an sf Object
 #'
-#' @param sf_object The sf object.
+#' Verifies that the coordinate reference system (CRS) of an `sf` object is set
+#' to EPSG:4326, which is required for specific geographical applications. This
+#' CRS corresponds to WGS 84, a global geographic coordinate system. The
+#' function halts execution with an error if the CRS is not EPSG:4326.
 #'
-#' @return None; the function will stop execution and throw an error if the CRS
-#'   of sf_object is not 4326.
+#' @param sf_object The `sf` object to check, representing geographical features
+#'   and their attributes.
+#'
+#' @return Does not return a value but halts execution with an error if the CRS
+#'   of `sf_object` is not EPSG:4326.
+#'
+#' @examples
+#' # Assuming you have an `sf` object named `data`:
+#' # check_crs(data)
+#'
 #' @keywords internal
 #' @export
 check_crs <- function(sf_object) {
-
   crs <- sf::st_crs(sf_object)
 
   if (is.null(crs$epsg) || crs$epsg != 4326) {
-    stop("Error: Coordinate reference system check failed. The sf object's CRS must EPSG:4326.\n")
-  } else {
-    cat("Coordinate reference system check passed.\n")
+    stop(paste0("Error: Coordinate reference system check failed. ",
+                "The sf object's CRS must be EPSG:4326, but found EPSG:", crs$epsg, ".\n"))
   }
+
+  cat("Coordinate reference system check passed.\n")
 }
 
 
-#' Check the geometry of an sf object.
+#' Check Geometry Type of an sf Object
 #'
-#' @param sf_object The sf object.
-#' @param geom_category A string describing the expected geometry type; only
-#'   'line' or 'point' are allowed.
+#' Validates whether the geometry of an `sf` object matches the specified
+#' category. This function is designed to ensure that spatial operations are
+#' performed on the appropriate geometry types, specifically 'line' and 'point'
+#' geometries.
 #'
-#' @return None; the function will stop execution and throw an error if the
-#'   geometry type of sf_object does not match the expected type.
+#' @param sf_object An `sf` object, which represents spatial features.
+#' @param geom_category A string indicating the expected geometry category.
+#'   Accepts 'line' for LINESTRING and MULTILINESTRING geometries, or 'point'
+#'   for POINT and MULTIPOINT geometries.
+#'
+#' @return Does not return a value but halts execution with an error message if
+#'   the `sf_object`'s geometry does not match the expected category.
+#'
+#' @examples
+#' # Assuming `sf_lines` and `sf_points` are sf objects with LINESTRING and
+#' # POINT geometries, respectively:
+#' check_geometry_type(sf_lines, "line")
+#' check_geometry_type(sf_points, "point")
+#'
 #' @keywords internal
 #' @export
 check_geometry_type <- function(sf_object, geom_category) {
   # Define mapping from simple types to specific geometry types
+  geom_category <- tolower(geom_category)
   geom_type_mapping <- list(line = c("LINESTRING", "MULTILINESTRING"),
                             point = c("POINT", "MULTIPOINT"))
 
   # Check if the specified category is valid
-  if (!tolower(geom_category) %in% names(geom_type_mapping)) {
-    stop("Error: Invalid geometry category. Please use one of the following: ",
+  if (!geom_category %in% names(geom_type_mapping)) {
+    stop("Error: Invalid geometry category '", geom_category, "'. Please use one of the following: ",
          paste(names(geom_type_mapping), collapse = ", "), ".\n")
   }
 
@@ -47,31 +71,42 @@ check_geometry_type <- function(sf_object, geom_category) {
   geom_types <- unique(sf::st_geometry_type(sf_object))
 
   if (!all(geom_types %in% valid_types)) {
-    stop(paste("Error: Geometry check failed. The sf object's geometry type must be one of:",
-               paste(valid_types,collapse = ", "), ".
-               Found types:",
-               paste(geom_types, collapse = ", "), ".\n"))
+    stop("Error: Geometry check failed. Expected '", geom_category, "' but found types: ",
+         paste(geom_types, collapse = ", "), ".\n")
   }
 
   cat("Geometry check passed.\n")
 }
 
 
-#' Check that the values in the Rank attribute are valid; allowable values are
-#' None, Primary, Principal, Secondary, Distributed. Note that Primary and
-#' Secondary will be replaced with Principal and Distributed, respectively, for
-#' standardization purposes.
+
+#' Standardize and Validate `Rank` Attribute in an sf Object
 #'
-#' @param sf_object The sf object.
+#' Ensures that the `Rank` attribute of an `sf` object contains only valid
+#' values and standardizes them by replacing "Primary" with "Principal" and
+#' "Secondary" with "Distributed". It checks for any invalid `Rank` values and
+#' stops execution with an error if any are found.
 #'
-#' @return The sf object with rank cleaned-up as needed. The function will stop
-#'   execution and throw an error if an invalid Rank is found.
+#' @param sf_object An `sf` object with a `Rank` attribute.
+#'
+#' @return Returns the modified `sf` object with the `Rank` attribute
+#'   standardized and validated. If invalid `Rank` values are present, execution
+#'   is halted with an error message.
+#'
+#' @examples
+#' # Assuming `sf_obj` is an existing `sf` object with a `Rank` column:
+#' sf_obj <- check_ranking(sf_obj)
+#'
 #' @keywords internal
 #' @export
 check_ranking <- function(sf_object) {
-  # Standardizing rank nomenclature; update ranks and track changes
-  original_rank <- sf_object$Rank
+  # Check that the 'Rank' column exists
+  if (!"Rank" %in% names(sf_object)) {
+    stop("The 'Rank' column is missing from the sf_object.")
+  }
 
+  # Update ranks as needed to standardize nomenclature
+  original_rank <- sf_object$Rank
   sf_object <- sf_object %>%
     dplyr::mutate(Rank = dplyr::case_when(
       Rank == "Primary" ~ "Principal",
@@ -89,8 +124,9 @@ check_ranking <- function(sf_object) {
 
   if (any(invalid_entries)) {
     invalid_values <- unique(sf_object$Rank[invalid_entries])
-    stop("Error: The following invalid `Rank` values were found: ",
-         paste(invalid_values, collapse = ", "), ".\n")
+    stop("Error: Invalid 'Rank' values found: ",
+         paste(invalid_values, collapse = ", "),
+         ". Valid options are 'None', 'Principal', 'Distributed'.")
   } else {
     cat("Rank check passed.\n")
   }
@@ -99,12 +135,23 @@ check_ranking <- function(sf_object) {
 }
 
 
-#' Check the coordinate reference system of an sf object; it should be
-#' EPSG:4326; covert if needed.
+
+#' Transform sf Object to EPSG:4326 CRS
 #'
-#' @param sf_object The sf object.
+#' Checks the coordinate reference system (CRS) of an `sf` object and transforms
+#' it to EPSG:4326 if it is not already in this CRS. EPSG:4326 corresponds to
+#' WGS 84, a widely used geographical coordinate system.
 #'
-#' @return An sf object in EPSG:4326.
+#' @param sf_object An `sf` object representing spatial features. The function
+#'   checks and, if necessary, converts the CRS of this object to EPSG:4326.
+#'
+#' @return Returns the `sf` object in the EPSG:4326 coordinate reference system.
+#'   If the original object is already in EPSG:4326, it is returned unchanged.
+#'
+#' @examples
+#' # Assuming `geo_sf` is your sf object not in EPSG:4326
+#' geo_sf_4326 <- project_to_4326(geo_sf)
+#'
 #' @keywords internal
 #' @export
 project_to_4326 <- function(sf_object) {
@@ -119,11 +166,27 @@ project_to_4326 <- function(sf_object) {
 }
 
 
-#' Convert rupture line work to vertex format for the Lavrentiadis & Abrahamson ECS tool.
+#' Convert rupture line work to a data frame of vertices with necessary
+#' attributes for the ECS Tool
 #'
-#' @param sf_object The sf object with LINESTRING geometry.
+#' Transforms an `sf` object containing LINESTRING geometries into a data frame
+#' of vertices. Each vertex is assigned a unique node ID within its rupture line
+#' (RUP_ID) and includes latitude and longitude coordinates. This function is
+#' tailored for preparing input data for the Lavrentiadis & Abrahamson ECS tool
+#' by structuring the `sf` object's line work into a vertex format in a data
+#' frame.
 #'
-#' @return A data frame with the rupture lines converted to vertices.
+#' @param sf_object An `sf` object, expected to contain LINESTRING geometries.
+#'
+#' @return Returns a data frame where each row represents a vertex from the
+#'   original LINESTRING geometries. The data frame includes columns for RUP_ID
+#'   (rupture line ID), NODE_ID (node order within each RUP_ID), and
+#'   Latitude/Longitude coordinates.
+#'
+#' @examples
+#' # Assuming `lines_sf` is an sf object with LINESTRING geometry
+#' vertices_df <- rups2verts(lines_sf)
+#'
 #' @keywords internal
 #' @export
 rups2verts <- function(sf_object) {
@@ -152,14 +215,29 @@ rups2verts <- function(sf_object) {
 }
 
 
-#' Convert measurement sites to format for the Lavrentiadis & Abrahamson ECS
-#' tool.
+#' Convert measurement sites to a data frame with necessary attributes for the
+#' ECS Tool
 #'
-#' @param sf_object The sf object with POINT geometry.
-#' @param displ_meas_col A string for the column name that
-#'   contains the fault displacement measurements.
+#' Transforms an `sf` object containing POINT geometries and associated
+#' displacement measurements into a data frame. This function is tailored for
+#' preparing input data for the Lavrentiadis & Abrahamson ECS tool .
 #'
-#' @return A data frame with the points.
+#' @param sf_object An `sf` object, expected to contain POINT geometries
+#'   representing measurement sites.
+#' @param displ_meas_col The name of the column within `sf_object` that contains
+#'   fault displacement measurements. This column is converted to numeric, if
+#'   not already, and its values are used to populate the 'displacement' column
+#'   in the output.
+#'
+#' @return Returns a data frame derived from the input `sf` object. The data
+#'   frame includes the original data (except for displacement values that are
+#'   negative, NaN, or NA), a renamed 'displacement' column, point IDs
+#'   ('PT_ID'), and coordinates ('Latitude', 'Longitude').
+#'
+#' @examples
+#' # Assuming `point_sf` is an sf object with POINT geometry and a 'measure' column:
+#' processed_df <- process_points(point_sf, 'measure')
+#'
 #' @keywords internal
 #' @export
 process_points <- function(sf_object, displ_meas_col) {

@@ -2,19 +2,26 @@
 % Please edit documentation in R/utils.R
 \name{project_to_4326}
 \alias{project_to_4326}
-\title{Check the coordinate reference system of an sf object; it should be
-EPSG:4326; covert if needed.}
+\title{Transform sf Object to EPSG:4326 CRS}
 \usage{
 project_to_4326(sf_object)
 }
 \arguments{
-\item{sf_object}{The sf object.}
+\item{sf_object}{An \code{sf} object representing spatial features. The function
+checks and, if necessary, converts the CRS of this object to EPSG:4326.}
 }
 \value{
-An sf object in EPSG:4326.
+Returns the \code{sf} object in the EPSG:4326 coordinate reference system.
+If the original object is already in EPSG:4326, it is returned unchanged.
 }
 \description{
-Check the coordinate reference system of an sf object; it should be
-EPSG:4326; covert if needed.
+Checks the coordinate reference system (CRS) of an \code{sf} object and transforms
+it to EPSG:4326 if it is not already in this CRS. EPSG:4326 corresponds to
+WGS 84, a widely used geographical coordinate system.
+}
+\examples{
+# Assuming `geo_sf` is your sf object not in EPSG:4326
+geo_sf_4326 <- project_to_4326(geo_sf)
+
 }
 \keyword{internal}

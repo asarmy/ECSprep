@@ -2,21 +2,32 @@
 % Please edit documentation in R/utils.R
 \name{check_geometry_type}
 \alias{check_geometry_type}
-\title{Check the geometry of an sf object.}
+\title{Check Geometry Type of an sf Object}
 \usage{
 check_geometry_type(sf_object, geom_category)
 }
 \arguments{
-\item{sf_object}{The sf object.}
+\item{sf_object}{An \code{sf} object, which represents spatial features.}
 
-\item{geom_category}{A string describing the expected geometry type; only
-'line' or 'point' are allowed.}
+\item{geom_category}{A string indicating the expected geometry category.
+Accepts 'line' for LINESTRING and MULTILINESTRING geometries, or 'point'
+for POINT and MULTIPOINT geometries.}
 }
 \value{
-None; the function will stop execution and throw an error if the
-geometry type of sf_object does not match the expected type.
+Does not return a value but halts execution with an error message if
+the \code{sf_object}'s geometry does not match the expected category.
 }
 \description{
-Check the geometry of an sf object.
+Validates whether the geometry of an \code{sf} object matches the specified
+category. This function is designed to ensure that spatial operations are
+performed on the appropriate geometry types, specifically 'line' and 'point'
+geometries.
+}
+\examples{
+# Assuming `sf_lines` and `sf_points` are sf objects with LINESTRING and
+# POINT geometries, respectively:
+check_geometry_type(sf_lines, "line")
+check_geometry_type(sf_points, "point")
+
 }
 \keyword{internal}

@@ -2,20 +2,27 @@
 % Please edit documentation in R/utils.R
 \name{check_crs}
 \alias{check_crs}
-\title{Check the coordinate reference system of an sf object. It should be 4326 for
-our application.}
+\title{Check CRS of an sf Object}
 \usage{
 check_crs(sf_object)
 }
 \arguments{
-\item{sf_object}{The sf object.}
+\item{sf_object}{The \code{sf} object to check, representing geographical features
+and their attributes.}
 }
 \value{
-None; the function will stop execution and throw an error if the CRS
-of sf_object is not 4326.
+Does not return a value but halts execution with an error if the CRS
+of \code{sf_object} is not EPSG:4326.
 }
 \description{
-Check the coordinate reference system of an sf object. It should be 4326 for
-our application.
+Verifies that the coordinate reference system (CRS) of an \code{sf} object is set
+to EPSG:4326, which is required for specific geographical applications. This
+CRS corresponds to WGS 84, a global geographic coordinate system. The
+function halts execution with an error if the CRS is not EPSG:4326.
+}
+\examples{
+# Assuming you have an `sf` object named `data`:
+# check_crs(data)
+
 }
 \keyword{internal}

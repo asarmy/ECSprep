@@ -2,24 +2,27 @@
 % Please edit documentation in R/utils.R
 \name{check_ranking}
 \alias{check_ranking}
-\title{Check that the values in the Rank attribute are valid; allowable values are
-None, Primary, Principal, Secondary, Distributed. Note that Primary and
-Secondary will be replaced with Principal and Distributed, respectively, for
-standardization purposes.}
+\title{Standardize and Validate \code{Rank} Attribute in an sf Object}
 \usage{
 check_ranking(sf_object)
 }
 \arguments{
-\item{sf_object}{The sf object.}
+\item{sf_object}{An \code{sf} object with a \code{Rank} attribute.}
 }
 \value{
-The sf object with rank cleaned-up as needed. The function will stop
-execution and throw an error if an invalid Rank is found.
+Returns the modified \code{sf} object with the \code{Rank} attribute
+standardized and validated. If invalid \code{Rank} values are present, execution
+is halted with an error message.
 }
 \description{
-Check that the values in the Rank attribute are valid; allowable values are
-None, Primary, Principal, Secondary, Distributed. Note that Primary and
-Secondary will be replaced with Principal and Distributed, respectively, for
-standardization purposes.
+Ensures that the \code{Rank} attribute of an \code{sf} object contains only valid
+values and standardizes them by replacing "Primary" with "Principal" and
+"Secondary" with "Distributed". It checks for any invalid \code{Rank} values and
+stops execution with an error if any are found.
+}
+\examples{
+# Assuming `sf_obj` is an existing `sf` object with a `Rank` column:
+sf_obj <- check_ranking(sf_obj)
+
 }
 \keyword{internal}

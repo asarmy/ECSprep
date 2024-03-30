@@ -2,17 +2,31 @@
 % Please edit documentation in R/utils.R
 \name{rups2verts}
 \alias{rups2verts}
-\title{Convert rupture line work to vertex format for the Lavrentiadis & Abrahamson ECS tool.}
+\title{Convert rupture line work to a data frame of vertices with necessary
+attributes for the ECS Tool}
 \usage{
 rups2verts(sf_object)
 }
 \arguments{
-\item{sf_object}{The sf object with LINESTRING geometry.}
+\item{sf_object}{An \code{sf} object, expected to contain LINESTRING geometries.}
 }
 \value{
-A data frame with the rupture lines converted to vertices.
+Returns a data frame where each row represents a vertex from the
+original LINESTRING geometries. The data frame includes columns for RUP_ID
+(rupture line ID), NODE_ID (node order within each RUP_ID), and
+Latitude/Longitude coordinates.
 }
 \description{
-Convert rupture line work to vertex format for the Lavrentiadis & Abrahamson ECS tool.
+Transforms an \code{sf} object containing LINESTRING geometries into a data frame
+of vertices. Each vertex is assigned a unique node ID within its rupture line
+(RUP_ID) and includes latitude and longitude coordinates. This function is
+tailored for preparing input data for the Lavrentiadis & Abrahamson ECS tool
+by structuring the \code{sf} object's line work into a vertex format in a data
+frame.
+}
+\examples{
+# Assuming `lines_sf` is an sf object with LINESTRING geometry
+vertices_df <- rups2verts(lines_sf)
+
 }
 \keyword{internal}
