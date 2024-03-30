@@ -3,6 +3,7 @@
 export(check_crs)
 export(check_geometry_type)
 export(check_ranking)
+export(create_ecs_input)
 export(process_points)
 export(project_to_4326)
 export(rups2verts)
