@@ -20,9 +20,4 @@ values and standardizes them by replacing "Primary" with "Principal" and
 "Secondary" with "Distributed". It checks for any invalid 'Rank' values and
 stops execution with an error if any are found.
 }
-\examples{
-Assuming 'sf_obj' is an existing 'sf' object with a 'Rank' column:
-sf_obj <- check_ranking(sf_obj)
-
-}
 \keyword{internal}
