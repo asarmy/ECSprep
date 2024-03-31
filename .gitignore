@@ -6,3 +6,5 @@
 .quarto
 
 scratch*
+inst/doc
+docs
