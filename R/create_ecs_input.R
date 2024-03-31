@@ -4,7 +4,10 @@
 #' the Lavrentiadis & Abrahamson ECS tool. The function transforms the
 #' shapefile's CRS to EPSG:4326, adds a default 'Rank' field if missing, and
 #' formats the data for ECS tool input. Output is saved as a CSV file in the
-#' specified or default directory.
+#' specified or default directory. Note that if the file is points measurement
+#' file, then a column called 'displ' that contains the fault displacement
+#' measurements is required and execution is halted with an error message if it
+#' is not present.
 #'
 #' @param in_filepath The path to the input Esri shapefile, recommended to use
 #'   'file.path()' for construction.
@@ -74,6 +77,7 @@ create_ecs_input <- function(in_filepath, geometry_type, output_folder = NULL) {
   if (!dir.exists(output_folder)) {
     dir.create(output_folder, recursive = TRUE, showWarnings = FALSE)
   }
+  out_filepath <- file.path(output_folder, filename_out)
   write.csv(dataframe, file.path(output_folder, filename_out), row.names = FALSE)
   cat("The data frame was saved in:\n", output_folder, "\n")
 

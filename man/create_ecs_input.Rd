@@ -25,5 +25,8 @@ Processes an Esri shapefile, either of line or point geometry, for input to
 the Lavrentiadis & Abrahamson ECS tool. The function transforms the
 shapefile's CRS to EPSG:4326, adds a default 'Rank' field if missing, and
 formats the data for ECS tool input. Output is saved as a CSV file in the
-specified or default directory.
+specified or default directory. Note that if the file is points measurement
+file, then a column called 'displ' that contains the fault displacement
+measurements is required and execution is halted with an error message if it
+is not present.
 }
