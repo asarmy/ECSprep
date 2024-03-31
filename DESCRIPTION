@@ -1,9 +1,9 @@
 Package: ECSprep
-Title: What the Package Does (One Line, Title Case)
+Title: This package creates CSV input files for the Lavrentiadis & Abrahamson ECS algorithm from a user's SHP files with rupture linework and fault displacement measurement sites.
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+    person("Alex", "Sarmiento", , "asarmy@ucla.edu", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-5502-6908"))
 Description: What the package does (one paragraph).
 License: MIT + file LICENSE
 Encoding: UTF-8
