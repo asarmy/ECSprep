@@ -12,6 +12,7 @@ The goal of ECSprep is to ...
 You can install the development version of ECSprep like so:
 
 ``` r
+install.packages("remotes")
 remotes::install_github("asarmy/ECSprep")
 ```
 
