@@ -17,7 +17,66 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 
 ```{r setup}
 library(ECSprep)
+suppressPackageStartupMessages(library(dplyr)) 
+
+# Note that dplyr is required for ECSprep.
+# It required here for piping inside user functions.
 ```
 
-to do text here
+The Lavrentiadis & Abrahamson Event Coordinate System (ECS) algorithm develops
+a nominal fault system trace from mapped faults represented as ordered vertices
+for each trace.
 
+This example shows how to use `ECSprep` to create the ruptures input file for
+the Lavrentiadis & Abrahamson ECS algorithm from a standard Esri shapefile.
+
+For this example, we will use the trace of the Newport-Inglewood Fault from
+the US Geological Survey Quarternary Fault and Fold Database. It is provided in
+`inst/extdata`.
+
+We will use the main user function of this package, which is `create_ecs_input.R`.
+It takes two required ordered arguments: `in_filepath` and `geometry_type` and
+optionally the `output_folder` for the CSV. 
+
+- The `in_filepath` must provide an Esri shapefile. Other formats are not supported.
+
+- The `geometry_type` will be "line" for our example here, which uses fault traces.
+(The other use case is "point" when fault displacement measurement sites are used."
+
+- If an `output_folder` is not specified, the CSV will be saved in the same 
+directory as the input shapefile.
+
+The CSV will retain all the attributes in the input shapefile. It will also add
+the following attributes:
+
+- `RUP_ID` is a unique identifier for each fault trace line.
+
+- `NODE_ID` is the order of the vertices for each fault trace line.
+
+- `Longitude` is the X coordinate in WGS84 (EPSG:4326) for the NODE_ID.
+
+- `Latitude` is the Y coordinate in WGS84 (EPSG:4326) for the NODE_ID.
+
+If there is not an attribute for `Rank`, then it will be added automatically and 
+populated with "None." It is recommended that users assign  *Principal* and 
+*Distributed* ranks because the ECS algorithm works better with rankings. In our 
+example here, the shapefile did not contain ranks, so we get a warning that this 
+column was added.
+
+```{r}
+input_shp <- system.file("extdata", "usgs_qffd_nirc.shp", package="ECSprep")
+outpath <-file.path(Sys.getenv("USERPROFILE"),"Desktop")
+create_ecs_input(input_shp, "line", outpath)
+```
+
+We can import the CSV and confirm that the new columns were added and the original
+ones were retained:
+
+```{r}
+file_out <- "rupture_vertices-usgs_qffd_nirc.csv"
+result <-  read.csv(file.path(outpath, file_out))
+names(result)
+```
+
+This CSV is can be used as the ruptures input for the Lavrentiadis & Abrahamson 
+ECS algorithm tool.
