@@ -201,62 +201,56 @@ rups2verts <- function(sf_object) {
 #' preparing input data for the Lavrentiadis & Abrahamson ECS tool .
 #'
 #' @param sf_object An 'sf' object, expected to contain POINT geometries
-#'   representing measurement sites.
-#' @param displ_meas_col The name of the column within 'sf_object' that contains
-#'   fault displacement measurements. This column is converted to numeric, if
-#'   not already, and its values are used to populate the 'displacement' column
-#'   in the output.
+#'   representing measurement sites. A column called 'displ' is required;
+#'   execution is halted with an error message if this column is not present.
 #'
 #' @return Returns a data frame derived from the input 'sf' object. The data
-#'   frame includes the original data (except for displacement values that are
-#'   negative, NaN, or NA), a renamed 'displacement' column, point IDs
-#'   ('PT_ID'), and coordinates ('Latitude', 'Longitude').
+#'   frame includes the original data, cleaned-up for invalid displacement
+#'   values (such as negative, NaN, or NA) and coordinates ('Latitude',
+#'   'Longitude').
 #'
 #' @keywords internal
 #' @export
-process_points <- function(sf_object, displ_meas_col) {
+process_points <- function(sf_object) {
   # Ensure the geometry is of type "point"
   check_geometry_type(sf_object, "point")
 
   # Check that the specified displacement measurement field exists
-  if (!displ_meas_col %in% names(sf_object)) {
-    stop("Error: The specified displacement measurement column could not be found: ", displ_meas_col, "\n")
+  if (!"displ" %in% names(sf_object)) {
+    stop("Error: A column called 'displ' is required but could not be found.\n")
   }
 
   # Convert displacement column to numeric if it's not already
-  if (!is.numeric(sf_object[[displ_meas_col]])) {
-    sf_object[[displ_meas_col]] <- as.numeric(as.character(sf_object[[displ_meas_col]]))
+  if (!is.numeric(sf_object[["displ"]])) {
+    sf_object[["displ"]] <- as.numeric(as.character(sf_object[["displ"]]))
 
-    if (any(is.na(sf_object[[displ_meas_col]]))) {
-      warning(paste0("NAs introduced by coercion; some values in '", displ_meas_col, "' could not be converted to numeric.\n"))
+    if (any(is.na(sf_object[["displ"]]))) {
+      warning("NAs introduced by coercion; some values in 'displ' could not be converted to numeric.\n")
     }
   }
 
   # Drop rows with negative values in displacement column
-  if (any(sf_object[[displ_meas_col]] < 0, na.rm = TRUE)) {
-    sf_object <- sf_object[sf_object[[displ_meas_col]] >= 0, ]
+  if (any(sf_object[["displ"]] < 0, na.rm = TRUE)) {
+    sf_object <- sf_object[sf_object[["displ"]] >= 0, ]
 
-    warning(paste0("Rows with negative values in '", displ_meas_col, "' have been removed.\n"))
+    warning("Rows with negative values in 'displ' have been removed.\n")
   }
 
   # Drop rows with NaN values in displacement column
-  if (any(is.nan(sf_object[[displ_meas_col]]), na.rm = TRUE)) {
+  if (any(is.nan(sf_object[["displ"]]), na.rm = TRUE)) {
     # Filter out NaN values
-    sf_object <- sf_object[!is.nan(sf_object[[displ_meas_col]]), ]
+    sf_object <- sf_object[!is.nan(sf_object[["displ"]]), ]
 
-    warning(paste0("Rows with NaN values in '", displ_meas_col, "' have been removed.\n"))
+    warning("Rows with NaN values in 'displ' have been removed.\n")
   }
 
   # Drop rows with NA values in displacement column
-  if (any(is.na(sf_object[[displ_meas_col]]), na.rm = TRUE)) {
+  if (any(is.na(sf_object[["displ"]]), na.rm = TRUE)) {
     # Filter out NA values
-    sf_object <- sf_object[!is.na(sf_object[[displ_meas_col]]), ]
+    sf_object <- sf_object[!is.na(sf_object[["displ"]]), ]
 
-    warning(paste0("Rows with NA values in '", displ_meas_col, "' have been removed.\n"))
+    warning("Rows with NA values in 'displ' have been removed.\n")
   }
-
-  # Rename the displacement column for standardization
-  sf_object$displacement <- sf_object[[displ_meas_col]]
 
   # Add the PT_ID field if it doesn't exist
   if (!"PT_ID" %in% names(sf_object)) {
@@ -269,7 +263,6 @@ process_points <- function(sf_object, displ_meas_col) {
     dplyr::mutate(Latitude = sf::st_coordinates(.)[, "Y"],
                   Longitude = sf::st_coordinates(.)[, "X"]) %>%
     sf::st_set_geometry(NULL) %>%
-    dplyr::select(-displ_meas_col) %>%
     as.data.frame()
 
   return(df_pts)
