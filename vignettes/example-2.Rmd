@@ -1,0 +1,26 @@
+---
+title: "Creating ECS input files for presentation/analysis of data from a surface-rupturing earthquake"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{example-2}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+options(rmarkdown.html_vignette.check_title = FALSE)
+```
+
+```{r setup}
+library(ECSprep)
+suppressPackageStartupMessages(library(dplyr)) 
+
+# Note that dplyr is required for ECSprep.
+# It required here for piping inside user functions.
+```
+
+TODO

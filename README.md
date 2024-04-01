@@ -77,8 +77,13 @@ create_ecs_input(file.path(path/to/my/measurement_sites.shp), "point")
 
 For more examples, see the Vignettes:
 
-- [Creating ECS input files for Fault Displacement Hazard Analysis](https://github.com/asarmy/ECSprep/blob/main/vignettes/example-1.Rmd)
+- [Creating ECS input files for Fault Displacement Hazard Analysis](https://github.com/asarmy/ECSprep/blob/master/vignettes/example-1.Rmd)
 is an example showing how to create the ruptures input file from a standard 
 Esri shapefile.
+
+
+- [Creating ECS input files for presentation/analysis of data from a surface-rupturing earthquake](https://github.com/asarmy/ECSprep/blob/master/vignettes/example-2.Rmd)
+is an example showing how to create the fault displacement and ruptures input 
+files from standard Esri shapefiles.
 
 
