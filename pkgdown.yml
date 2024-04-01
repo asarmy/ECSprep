@@ -3,7 +3,8 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   example-1: example-1.html
-last_built: 2024-04-01T16:48Z
+  example-2: example-2.html
+last_built: 2024-04-01T16:58Z
 urls:
   reference: https://asarmy.github.io/ECSprep/reference
   article: https://asarmy.github.io/ECSprep/articles
