@@ -61,20 +61,20 @@ If there is not an attribute for `Rank`, then it will be added automatically and
 populated with "None." It is recommended that users assign  *Principal* and 
 *Distributed* ranks because the ECS algorithm works better with rankings. In our 
 example here, the shapefile did not contain ranks, so we get a warning that this 
-column was added.
+column was added. If the `Rank` column contains invalid values, then the user
+will be notified.
 
 ```{r}
 input_shp <- system.file("extdata", "usgs_qffd_nirc.shp", package="ECSprep")
-outpath <-file.path(Sys.getenv("USERPROFILE"),"Desktop")
-create_ecs_input(input_shp, "line", outpath)
+create_ecs_input(input_shp, "line")
 ```
 
 We can import the CSV and confirm that the new columns were added and the original
 ones were retained:
 
 ```{r}
-file_out <- "rupture_vertices-usgs_qffd_nirc.csv"
-result <-  read.csv(file.path(outpath, file_out))
+file_out <- system.file("extdata","rupture_vertices-usgs_qffd_nirc.csv", package="ECSprep")
+result <-  read.csv(file.path(file_out))
 names(result)
 ```
 
