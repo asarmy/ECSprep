@@ -81,8 +81,74 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/asarmy/ECSprep" class="external-link">ECSprep</a></span><span class="op">)</span></span></code></pre></div>
-<p>to do text here</p>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/asarmy/ECSprep" class="external-link">ECSprep</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressPackageStartupMessages</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span><span class="op">)</span> </span>
+<span></span>
+<span><span class="co"># Note that dplyr is required for ECSprep.</span></span>
+<span><span class="co"># It required here for piping inside user functions.</span></span></code></pre></div>
+<p>The Lavrentiadis &amp; Abrahamson Event Coordinate System (ECS)
+algorithm develops a nominal fault system trace from mapped faults
+represented as ordered vertices for each trace.</p>
+<p>This example shows how to use <code>ECSprep</code> to create the
+ruptures input file for the Lavrentiadis &amp; Abrahamson ECS algorithm
+from a standard Esri shapefile.</p>
+<p>For this example, we will use the trace of the Newport-Inglewood
+Fault from the US Geological Survey Quarternary Fault and Fold Database.
+It is provided in <code>inst/extdata</code>.</p>
+<p>We will use the main user function of this package, which is
+<code>create_ecs_input.R</code>. It takes two required ordered
+arguments: <code>in_filepath</code> and <code>geometry_type</code> and
+optionally the <code>output_folder</code> for the CSV.</p>
+<ul>
+<li><p>The <code>in_filepath</code> must provide an Esri shapefile.
+Other formats are not supported.</p></li>
+<li><p>The <code>geometry_type</code> will be “line” for our example
+here, which uses fault traces. (The other use case is “point” when fault
+displacement measurement sites are used.”</p></li>
+<li><p>If an <code>output_folder</code> is not specified, the CSV will
+be saved in the same directory as the input shapefile.</p></li>
+</ul>
+<p>The CSV will retain all the attributes in the input shapefile. It
+will also add the following attributes:</p>
+<ul>
+<li><p><code>RUP_ID</code> is a unique identifier for each fault trace
+line.</p></li>
+<li><p><code>NODE_ID</code> is the order of the vertices for each fault
+trace line.</p></li>
+<li><p><code>Longitude</code> is the X coordinate in WGS84 (EPSG:4326)
+for the NODE_ID.</p></li>
+<li><p><code>Latitude</code> is the Y coordinate in WGS84 (EPSG:4326)
+for the NODE_ID.</p></li>
+</ul>
+<p>If there is not an attribute for <code>Rank</code>, then it will be
+added automatically and populated with “None.” It is recommended that
+users assign <em>Principal</em> and <em>Distributed</em> ranks because
+the ECS algorithm works better with rankings. In our example here, the
+shapefile did not contain ranks, so we get a warning that this column
+was added. If the <code>Rank</code> column contains invalid values, then
+the user will be notified.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">input_shp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"usgs_qffd_nirc.shp"</span>, package<span class="op">=</span><span class="st">"ECSprep"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/create_ecs_input.html">create_ecs_input</a></span><span class="op">(</span><span class="va">input_shp</span>, <span class="st">"line"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in create_ecs_input(input_shp, "line"): Rank attribute is missing. It was added with default values of `None`.</span></span>
+<span><span class="co">#&gt; Rank check passed.</span></span>
+<span><span class="co">#&gt; Geometry check passed.</span></span>
+<span><span class="co">#&gt; The data frame was saved in:</span></span>
+<span><span class="co">#&gt;  /home/runner/work/_temp/Library/ECSprep/extdata/ECSprep-outputs</span></span></code></pre></div>
+<p>We can import the CSV and confirm that the new columns were added and
+the original ones were retained:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">file_out</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>,<span class="st">"rupture_vertices-usgs_qffd_nirc.csv"</span>, package<span class="op">=</span><span class="st">"ECSprep"</span><span class="op">)</span></span>
+<span><span class="va">result</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">file_out</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  [1] "fault_name" "sec_name"   "fault_id"   "section_id" "Location"  </span></span>
+<span><span class="co">#&gt;  [6] "linetype"   "age"        "dip"        "slip_rate"  "slip_sense"</span></span>
+<span><span class="co">#&gt; [11] "scale"      "class"      "mapped_cer" "strike"     "length"    </span></span>
+<span><span class="co">#&gt; [16] "cooperator" "earthquake" "fault_url"  "symbology"  "ref_id"    </span></span>
+<span><span class="co">#&gt; [21] "Shape_Leng" "Rank"       "RUP_ID"     "NODE_ID"    "Latitude"  </span></span>
+<span><span class="co">#&gt; [26] "Longitude"</span></span></code></pre></div>
+<p>This CSV is can be used as the ruptures input for the Lavrentiadis
+&amp; Abrahamson ECS algorithm tool.</p>
   </main>
 </div>
 
