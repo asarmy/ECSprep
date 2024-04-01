@@ -80,3 +80,10 @@ test_that("error is issued when input file is not SHP", {
     create_ecs_input(test_path("data", "blah.txt"), "line")
   })
 })
+
+
+test_that("error is issued when input file does not have a CRS", {
+  expect_error({
+    create_ecs_input(test_path("data", "data_no_crs.shp"), "line")
+  })
+})

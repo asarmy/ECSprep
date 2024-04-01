@@ -38,6 +38,9 @@ create_ecs_input <- function(in_filepath, geometry_type, output_folder = NULL) {
   # Import file using sf library
   sf_object <- sf::st_read(in_filepath, quiet = TRUE)
 
+  # Check that a CRS (i.e., a PRJ file) is provided with the SHP
+  check_crs(sf_object)
+
   # Convert the object to EPSG:4326 if it is not already in that CRS
   sf_object <- project_to_4326(sf_object)
 

@@ -6,7 +6,7 @@ test_that("coordinate reference system check passes when it should", {
 
 test_that("coordinate reference system returns an error when it should", {
   expect_error({
-    sf_object <- sf::st_read(test_path("data", "galway_lake_sites_epsg32611.shp"), quiet = TRUE)
+    sf_object <- sf::st_read(test_path("data", "data_no_crs.shp"), quiet = TRUE)
     check_crs(sf_object)
   })
 })

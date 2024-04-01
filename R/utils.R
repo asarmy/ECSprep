@@ -1,24 +1,22 @@
 #' Check CRS of an sf Object
 #'
-#' Verifies that the coordinate reference system (CRS) of an 'sf' object is set
-#' to EPSG:4326, which is required for specific geographical applications. This
-#' CRS corresponds to WGS 84, a global geographic coordinate system. The
-#' function halts execution with an error if the CRS is not EPSG:4326.
+#' Verifies that a coordinate reference system (CRS) is provided for the 'sf'
+#' object, which is required for specific geographical applications. This The
+#' function halts execution with an error if the CRS is not set.
 #'
 #' @param sf_object The 'sf' object to check, representing geographical features
 #'   and their attributes.
 #'
-#' @return Does not return a value but halts execution with an error if the CRS
-#'   of 'sf_object' is not EPSG:4326.
+#' @return Does not return a value but halts execution with an error if there is
+#'   no CRS for the 'sf_object' .
 #'
 #' @keywords internal
 #' @export
 check_crs <- function(sf_object) {
   crs <- sf::st_crs(sf_object)
 
-  if (is.null(crs$epsg) || crs$epsg != 4326) {
-    stop(paste0("Error: Coordinate reference system check failed. ",
-                "The sf object's CRS must be EPSG:4326, but found EPSG:", crs$epsg, ".\n"))
+  if (is.null(crs) || is.na(crs$epsg)) {
+    stop("Error: Coordinate reference system check failed.\nNo coordinate reference system (CRS) is set.\n")
   }
 
   cat("Coordinate reference system check passed.\n")

@@ -11,13 +11,12 @@ check_crs(sf_object)
 and their attributes.}
 }
 \value{
-Does not return a value but halts execution with an error if the CRS
-of 'sf_object' is not EPSG:4326.
+Does not return a value but halts execution with an error if there is
+no CRS for the 'sf_object' .
 }
 \description{
-Verifies that the coordinate reference system (CRS) of an 'sf' object is set
-to EPSG:4326, which is required for specific geographical applications. This
-CRS corresponds to WGS 84, a global geographic coordinate system. The
-function halts execution with an error if the CRS is not EPSG:4326.
+Verifies that a coordinate reference system (CRS) is provided for the 'sf'
+object, which is required for specific geographical applications. This The
+function halts execution with an error if the CRS is not set.
 }
 \keyword{internal}
