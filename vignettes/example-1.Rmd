@@ -73,7 +73,7 @@ We can import the CSV and confirm that the new columns were added and the origin
 ones were retained:
 
 ```{r}
-file_out <- system.file("extdata","rupture_vertices-usgs_qffd_nirc.csv", package="ECSprep")
+file_out <- system.file("extdata","ECSprep-outputs", "rupture_vertices-usgs_qffd_nirc.csv", package="ECSprep")
 result <-  read.csv(file.path(file_out))
 names(result)
 ```
