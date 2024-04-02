@@ -206,7 +206,7 @@ rups2verts <- function(sf_object) {
 #' @return Returns a data frame derived from the input 'sf' object. The data
 #'   frame includes the original data, cleaned-up for invalid displacement
 #'   values (such as negative, NaN, or NA) and coordinates ('Latitude',
-#'   'Longitude').
+#'   'Longitude' in EPSG:4326).
 #'
 #' @keywords internal
 #' @export
@@ -256,7 +256,64 @@ process_points <- function(sf_object) {
     sf_object$PT_ID <- seq_len(nrow(sf_object))
   }
 
-  # Add Latitude, Longitude columns
+  # Rename original Lat/Long columns if they exist in case the CRS is different
+  if("Latitude" %in% names(sf_object)) {
+    sf_object <- sf_object %>%
+      dplyr::rename(orig_latitude = Latitude)
+  }
+  if("Longitude" %in% names(sf_object)) {
+    sf_object <- sf_object %>%
+      dplyr::rename(orig_longitude = Longitude)
+  }
+
+  # Add Final Latitude, Longitude columns
+  # Clean up: drop geometry field, drop original displ field, convert to data frame
+  df_pts <- sf_object %>%
+    dplyr::mutate(Latitude = sf::st_coordinates(.)[, "Y"],
+                  Longitude = sf::st_coordinates(.)[, "X"]) %>%
+    sf::st_set_geometry(NULL) %>%
+    as.data.frame()
+
+  return(df_pts)
+}
+
+
+#' Convert hazard analysis sites to a data frame with necessary attributes for
+#' the ECS Tool
+#'
+#' Transforms an 'sf' object containing POINT geometries into a data frame. This
+#' function is tailored for preparing input data for the Lavrentiadis &
+#' Abrahamson ECS tool .
+#'
+#' @param sf_object An 'sf' object, expected to contain POINT geometries
+#'   representing hazard evaluation sites.
+#'
+#' @return Returns a data frame derived from the input 'sf' object. The data
+#'   frame includes the original data and coordinates ('Latitude', 'Longitude'
+#'   in EPSG:4326).
+#'
+#' @keywords internal
+#' @export
+process_hazsite <- function(sf_object) {
+  # Ensure the geometry is of type "point"
+  check_geometry_type(sf_object, "point")
+
+  # Add the PT_ID field if it doesn't exist
+  if (!"SITE_ID" %in% names(sf_object)) {
+    sf_object$SITE_ID <- seq_len(nrow(sf_object))
+  }
+
+  # Rename original Lat/Long columns if they exist in case the CRS is different
+  if("Latitude" %in% names(sf_object)) {
+    sf_object <- sf_object %>%
+      dplyr::rename(orig_latitude = Latitude)
+  }
+  if("Longitude" %in% names(sf_object)) {
+    sf_object <- sf_object %>%
+      dplyr::rename(orig_longitude = Longitude)
+  }
+
+  # Add Final Latitude, Longitude columns
   # Clean up: drop geometry field, drop original displ field, convert to data frame
   df_pts <- sf_object %>%
     dplyr::mutate(Latitude = sf::st_coordinates(.)[, "Y"],
