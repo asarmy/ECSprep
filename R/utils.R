@@ -71,9 +71,9 @@ check_geometry_type <- function(sf_object, geom_category) {
 #' Standardize and Validate 'Rank' Attribute in an sf Object
 #'
 #' Ensures that the 'Rank' attribute of an 'sf' object contains only valid
-#' values and standardizes them by replacing "Primary" with "Principal" and
-#' "Secondary" with "Distributed". It checks for any invalid 'Rank' values and
-#' stops execution with an error if any are found.
+#' values and standardizes them by replacing "Primary" and "Cumulative" with
+#' "Principal" and "Secondary" with "Distributed". It checks for any invalid
+#' 'Rank' values and stops execution with an error if any are found.
 #'
 #' @param sf_object An 'sf' object with a 'Rank' attribute.
 #'
@@ -95,6 +95,7 @@ check_ranking <- function(sf_object) {
     dplyr::mutate(Rank = dplyr::case_when(
       Rank == "Primary" ~ "Principal",
       Rank == "Secondary" ~ "Distributed",
+      Rank == "Cumulative" ~ "Principal",
       TRUE ~ as.character(Rank)
     ))
 

@@ -16,8 +16,8 @@ is halted with an error message.
 }
 \description{
 Ensures that the 'Rank' attribute of an 'sf' object contains only valid
-values and standardizes them by replacing "Primary" with "Principal" and
-"Secondary" with "Distributed". It checks for any invalid 'Rank' values and
-stops execution with an error if any are found.
+values and standardizes them by replacing "Primary" and "Cumulative" with
+"Principal" and "Secondary" with "Distributed". It checks for any invalid
+'Rank' values and stops execution with an error if any are found.
 }
 \keyword{internal}
