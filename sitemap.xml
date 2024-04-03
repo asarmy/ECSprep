@@ -37,13 +37,22 @@
     <loc>https://asarmy.github.io/ECSprep/reference/check_ranking.html</loc>
   </url>
   <url>
-    <loc>https://asarmy.github.io/ECSprep/reference/create_ecs_input.html</loc>
+    <loc>https://asarmy.github.io/ECSprep/reference/create_ecs_input_haz_sites.html</loc>
+  </url>
+  <url>
+    <loc>https://asarmy.github.io/ECSprep/reference/create_ecs_input_measurements.html</loc>
+  </url>
+  <url>
+    <loc>https://asarmy.github.io/ECSprep/reference/create_ecs_input_ruptures.html</loc>
   </url>
   <url>
     <loc>https://asarmy.github.io/ECSprep/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://asarmy.github.io/ECSprep/reference/process_points.html</loc>
+    <loc>https://asarmy.github.io/ECSprep/reference/process_hazsite.html</loc>
+  </url>
+  <url>
+    <loc>https://asarmy.github.io/ECSprep/reference/process_measurements.html</loc>
   </url>
   <url>
     <loc>https://asarmy.github.io/ECSprep/reference/project_to_4326.html</loc>
