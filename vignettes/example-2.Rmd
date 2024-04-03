@@ -2,7 +2,7 @@
 title: "Creating ECS input files for presentation/analysis of data from a surface-rupturing earthquake"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{example-2}
+  %\VignetteIndexEntry{example-1}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -23,4 +23,143 @@ suppressPackageStartupMessages(library(dplyr))
 # It required here for piping inside user functions.
 ```
 
-TODO
+## Objective
+
+Presentation and analysis of post-earthquake fault rupture and displacement
+data, where the user has mapped traces of surface ruptures and locations where
+fault displacement was measured.
+
+This example shows how to use `ECSprep` to create the a ruptures input file and
+a fault displacement measurements input file for the Lavrentiadis & Abrahamson 
+ECS algorithm from standard Esri shapefiles..
+
+## Example data
+
+For this example, we will use data from the 1915 Pleasant Valley earthquake in
+Nevada. The original data are from [Wallace et al. (1984)](https://doi.org/10.3133/pp1274AB)
+and are included in the FDHI Project Database Flatfiles ([Sarmiento et al., 2021](https://doi.org/10.34948/N3JS31))
+as Earthquake #34. 
+
+The shapefiles are provided in `inst/extdata` in this package.
+
+## Preparing the faults
+
+The Lavrentiadis & Abrahamson Event Coordinate System (ECS) algorithm develops
+a nominal fault system trace from mapped faults represented as ordered vertices
+for each trace.
+
+Just like the example in [Creating ECS input files for Fault Displacement Hazard Analysis](https://github.com/asarmy/ECSprep/blob/master/vignettes/example-1.Rmd), 
+we will use the `create_ecs_input_ruptures.R` function of this package.
+
+It takes one required argument, `in_filepath`, and one optional argument for the 
+`output_folder` where the CSV will be saved. 
+
+- The `in_filepath` must provide an Esri shapefile. Other formats are not 
+supported.
+
+- If an `output_folder` is not specified, the CSV will be saved in the same 
+directory as the input shapefile.
+
+The CSV will retain all the attributes in the input shapefile. It will also add
+the following attributes:
+
+- `RUP_ID` is a unique identifier for each fault trace line.
+
+- `NODE_ID` is the order of the vertices for each fault trace line.
+
+- `Longitude` is the X coordinate in WGS84 (EPSG:4326) for the NODE_ID.
+
+- `Latitude` is the Y coordinate in WGS84 (EPSG:4326) for the NODE_ID.
+
+If the `RUP_ID` column exists in the input shapefile, it will retained as-is.
+
+If there is not an attribute for `Rank`, then it will be added automatically and 
+populated with "None." It is recommended that users assign  *Principal* and 
+*Distributed* ranks because the ECS algorithm works better with rankings. 
+
+In our example here, the shapefile contained a `Rank` column with valid ranks.
+
+```{r}
+input_shp <- system.file("extdata", "pleasant_valley_final_ruptures.shp", package="ECSprep")
+create_ecs_input_ruptures(input_shp)
+```
+
+We can import the CSV and confirm that the new columns were added and the original
+ones were retained:
+
+```{r}
+file_out <- system.file("extdata", "ECSprep-outputs", "rupture_vertices-pleasant_valley_final_ruptures.csv", package="ECSprep")
+result <-  read.csv(file.path(file_out))
+names(result)
+```
+
+This CSV is can be used as the ruptures input for the Lavrentiadis & Abrahamson 
+ECS algorithm tool.
+
+
+## Preparing the fault displacement measurement sites
+
+Most fault displacement hazard analysis models for principal faulting use the
+along-strike location of the site as a predictor variable. Similarly, most 
+models for distributed faulting use the strike-normal distance of the site as
+a predictor variable.
+
+The Lavrentiadis & Abrahamson algorithm will can use the data to influence the 
+ECS in addition to the impact the fault traces have on the ECS.
+
+We will use the `create_ecs_input_measurements.R` function of this package.
+
+It takes one required argument, `in_filepath`, and one optional argument for the 
+`output_folder` where the CSV will be saved. 
+
+Note that a column called `displ` that contains the fault displacement
+measurements is required. As long as all values are in the same units, the unit
+does not matter because only the relative amplitude is important.
+
+- The `in_filepath` must provide an Esri shapefile. Other formats are not 
+supported.
+
+- If a `displ_column` is not specified, then the user will be notified and the 
+script will halt execution.
+
+- If an `output_folder` is not specified, the CSV will be saved in the same 
+directory as the input shapefile.
+
+The CSV will retain all the attributes in the input shapefile. It will also add
+the following attributes:
+
+- `PT_ID` is a unique identifier for each site .
+
+- `Longitude` is the X coordinate in WGS84 (EPSG:4326) for the SITE_ID.
+
+- `Latitude` is the Y coordinate in WGS84 (EPSG:4326) for the SITE_ID.
+
+If the `PT_ID` column exists in the input shapefile, it will retained as-is.
+
+If there is not an attribute for `Rank`, then it will be added automatically and 
+populated with "None." It is recommended that users assign  *Principal* and 
+*Distributed* ranks because the ECS algorithm works better with rankings. 
+
+In our example here, the shapefile contained a `Rank` column with valid ranks.
+
+```{r}
+input_shp <- system.file("extdata", "pleasant_valley_final_measurements.shp", package="ECSprep")
+create_ecs_input_measurements(input_shp)
+```
+
+We can import the CSV and inspect the contents:
+
+```{r}
+file_out <- system.file("extdata", "ECSprep-outputs", "displacement_sites-pleasant_valley_final_measurements.csv", package="ECSprep")
+result <-  read.csv(file.path(file_out))
+
+options(width = 120)
+head(result, 5)
+```
+
+
+This CSV is can be used as an optional fault displacement measurement input for 
+the Lavrentiadis & Abrahamson ECS algorithm tool.
+
+*Note this file is easy to create manually* as the only required contents are
+columns for `PT_ID`, `displ`, Latitude`, and `Longitude`.

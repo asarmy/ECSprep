@@ -23,25 +23,36 @@ suppressPackageStartupMessages(library(dplyr))
 # It required here for piping inside user functions.
 ```
 
+## Objective
+
+Forward-application of fault displacement hazard analysis models, where the
+user has mapped traces of active faults and site locations for hazard analysis.
+
+This example shows how to use ECSprep to create the ruptures input files for
+the Lavrentiadis & Abrahamson ECS algorithm from standard Esri shapefiles.
+
+## Example data
+
+For this example, we will use the trace of the Newport-Inglewood/Rose Canyon
+Fault System from the US Geological Survey Quarternary Fault and Fold Database. 
+It is provided as an Esri shapefile in `inst/extdata` in this package.
+
+We will also consider a randomly chosen site along the NI/RC. It is saved as
+an Esri shapefile in `inst/extdata` in this package.
+
+## Preparing the faults
+
 The Lavrentiadis & Abrahamson Event Coordinate System (ECS) algorithm develops
 a nominal fault system trace from mapped faults represented as ordered vertices
 for each trace.
 
-This example shows how to use `ECSprep` to create the ruptures input file for
-the Lavrentiadis & Abrahamson ECS algorithm from a standard Esri shapefile.
+We will use the `create_ecs_input_ruptures.R` function of this package.
 
-For this example, we will use the trace of the Newport-Inglewood Fault from
-the US Geological Survey Quarternary Fault and Fold Database. It is provided in
-`inst/extdata`.
+It takes one required argument, `in_filepath`, and one optional argument for the 
+`output_folder` where the CSV will be saved. 
 
-We will use the main user function of this package, which is `create_ecs_input.R`.
-It takes two required ordered arguments: `in_filepath` and `geometry_type` and
-optionally the `output_folder` for the CSV. 
-
-- The `in_filepath` must provide an Esri shapefile. Other formats are not supported.
-
-- The `geometry_type` will be "line" for our example here, which uses fault traces.
-(The other use case is "point" when fault displacement measurement sites are used."
+- The `in_filepath` must provide an Esri shapefile. Other formats are not 
+supported.
 
 - If an `output_folder` is not specified, the CSV will be saved in the same 
 directory as the input shapefile.
@@ -57,16 +68,19 @@ the following attributes:
 
 - `Latitude` is the Y coordinate in WGS84 (EPSG:4326) for the NODE_ID.
 
+If the `RUP_ID` column exists in the input shapefile, it will retained as-is.
+
 If there is not an attribute for `Rank`, then it will be added automatically and 
 populated with "None." It is recommended that users assign  *Principal* and 
-*Distributed* ranks because the ECS algorithm works better with rankings. In our 
-example here, the shapefile did not contain ranks, so we get a warning that this 
-column was added. If the `Rank` column contains invalid values, then the user
-will be notified.
+*Distributed* ranks because the ECS algorithm works better with rankings. 
+
+In our example here, the shapefile did not contain ranks, so we get a warning 
+that this column was added. If the `Rank` column contains invalid values, then 
+the user will be notified and the script will halt execution.
 
 ```{r}
 input_shp <- system.file("extdata", "usgs_qffd_nirc.shp", package="ECSprep")
-create_ecs_input(input_shp, "line")
+create_ecs_input_ruptures(input_shp)
 ```
 
 We can import the CSV and confirm that the new columns were added and the original
@@ -80,3 +94,56 @@ names(result)
 
 This CSV is can be used as the ruptures input for the Lavrentiadis & Abrahamson 
 ECS algorithm tool.
+
+
+## Preparing the hazard sites
+
+Most fault displacement hazard analysis models for principal faulting use the
+along-strike location of the site as a predictor variable. Similarly, most 
+models for distributed faulting use the strike-normal distance of the site as
+a predictor variable.
+
+The Lavrentiadis & Abrahamson algorithm can provide the ECS ordinates of a 
+hazard site if the ECS is established from the mapped faults (and optionally
+fault displacement measurement locations).
+
+We will use the `create_ecs_input_haz_sites.R` function of this package.
+
+It takes one required argument, `in_filepath`, and one optional argument for the 
+`output_folder` where the CSV will be saved. 
+
+- The `in_filepath` must provide an Esri shapefile. Other formats are not 
+supported.
+
+- If an `output_folder` is not specified, the CSV will be saved in the same 
+directory as the input shapefile.
+
+The CSV will retain all the attributes in the input shapefile. It will also add
+the following attributes:
+
+- `SITE_ID` is a unique identifier for each site .
+
+- `Longitude` is the X coordinate in WGS84 (EPSG:4326) for the SITE_ID.
+
+- `Latitude` is the Y coordinate in WGS84 (EPSG:4326) for the SITE_ID.
+
+
+```{r}
+input_shp <- system.file("extdata", "example_site.shp", package="ECSprep")
+create_ecs_input_haz_sites(input_shp)
+```
+
+We can import the CSV and inspect the contents:
+
+```{r}
+file_out <- system.file("extdata", "ECSprep-outputs", "hazard_sites-example_site.csv", package="ECSprep")
+result <-  read.csv(file.path(file_out))
+result
+```
+
+
+This CSV is can be used as an optional hazard site input for the Lavrentiadis & 
+Abrahamson ECS algorithm tool.
+
+*Note this file is easy to create manually* as the only required contents are
+columns for `SITE_ID`, `Latitude`, and `Longitude`.

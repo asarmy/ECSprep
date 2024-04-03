@@ -204,17 +204,16 @@ rups2verts <- function(sf_object) {
 #'   execution is halted with an error message if this column is not present.
 #'
 #' @return Returns a data frame derived from the input 'sf' object. The data
-#'   frame includes the original data, cleaned-up for invalid displacement
-#'   values (such as negative, NaN, or NA) and coordinates ('Latitude',
-#'   'Longitude' in EPSG:4326).
+#'   frame includes the original data and coordinates ('Latitude', 'Longitude'
+#'   in EPSG:4326).
 #'
 #' @keywords internal
 #' @export
-process_points <- function(sf_object) {
+process_measurements <- function(sf_object) {
   # Ensure the geometry is of type "point"
   check_geometry_type(sf_object, "point")
 
-  # Check that the specified displacement measurement field exists
+  # Check that the required displacement measurement field exists
   if (!"displ" %in% names(sf_object)) {
     stop("Error: A column called 'displ' is required but could not be found.\n")
   }
@@ -226,29 +225,6 @@ process_points <- function(sf_object) {
     if (any(is.na(sf_object[["displ"]]))) {
       warning("NAs introduced by coercion; some values in 'displ' could not be converted to numeric.\n")
     }
-  }
-
-  # Drop rows with negative values in displacement column
-  if (any(sf_object[["displ"]] < 0, na.rm = TRUE)) {
-    sf_object <- sf_object[sf_object[["displ"]] >= 0, ]
-
-    warning("Rows with negative values in 'displ' have been removed.\n")
-  }
-
-  # Drop rows with NaN values in displacement column
-  if (any(is.nan(sf_object[["displ"]]), na.rm = TRUE)) {
-    # Filter out NaN values
-    sf_object <- sf_object[!is.nan(sf_object[["displ"]]), ]
-
-    warning("Rows with NaN values in 'displ' have been removed.\n")
-  }
-
-  # Drop rows with NA values in displacement column
-  if (any(is.na(sf_object[["displ"]]), na.rm = TRUE)) {
-    # Filter out NA values
-    sf_object <- sf_object[!is.na(sf_object[["displ"]]), ]
-
-    warning("Rows with NA values in 'displ' have been removed.\n")
   }
 
   # Add the PT_ID field if it doesn't exist

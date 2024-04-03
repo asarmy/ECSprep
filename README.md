@@ -5,17 +5,18 @@
 [![R-CMD-check](https://github.com/asarmy/ECSprep/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/asarmy/ECSprep/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-The goal of ECSprep is to create CSV input files for the Lavrentiadis & Abrahamson 
-Event Cooredinate System (ECS) algorithm from a user's SHP files that contain 
-rupture or fault trace line work and/or fault displacement measurement sites.
+The goal of ECSprep is to create CSV input files for the Lavrentiadis & 
+Abrahamson Event Coordinate System (ECS) algorithm from a user's SHP files that 
+contain rupture or fault trace line work, fault displacement measurement sites, 
+or hazard analysis sites.
 
 There are two common applications for the ECS algorithm:
 
 1. Forward-application of fault displacement hazard analysis models, where the
-user has mapped traces of active faults.
+user has mapped traces of active faults and site locations for hazard analysis.
 
 2. Presentation and analysis of post-earthquake fault rupture and displacement
-data, where the user has mapped traces of surface ruptures and sites where
+data, where the user has mapped traces of surface ruptures and locations where
 fault displacement was measured.
 
 ## Installation
@@ -27,63 +28,51 @@ install.packages("remotes")
 remotes::install_github("asarmy/ECSprep")
 ```
 
-## User Overview
-
-### Here is a basic workflow for developing the CSV for the fault traces/ruptures:
-
-- User prepares a shapefile (SHP) containing mapped traces for the faults (or surface ruptures). 
-
-  - It is recommended that the user creates a `Rank` attribute and assigns 
-  "Principal" or "Distributed" classifications to the faults/ruptures. The
-  algorithm generally will perform better if these are specified, especially
-  when the fault system or surface rupture patterns are complex.
-  
-  - It does not matter which Coordinate Reference System (CRS) is used, but the
-  CRS must be assigned. In other words, a PRJ file must be present with the
-  SHP file suite.
-
-- User runs `ECSprep::create_ecs_input` with the fault trace SHP as the input.
-The script will produce a CSV that creates ordered vertices, with latitude
-and longitude coordinates, for each fault trace/rupture. 
-  
-  - If the CRS is not assigned, an error occurs.
-
-  - If a `Rank` column is not present, a warning is issued and it is 
-  automatically added with default values of "None."
-
-  - Other attributes that are present in the input SHP are retained in the CSV.
-  
-  - The CSV output defaults to the same directory as the input SHP, but the
-  user can optionally specify an alternative path.
-  
-### Here is a basic workflow for developing the CSV for the fault displacement masurement sites:
-
-TODO
-
-
-## "Gotchas"
-
-TODO
-
 ## Examples
 
 This is a basic example which shows how to use the package:
 
 ``` r
 library(ECSprep)
-create_ecs_input(file.path(path/to/my/rupture_traces.shp), "line")
-create_ecs_input(file.path(path/to/my/measurement_sites.shp), "point")
+create_ecs_input_ruptures(file.path(path/to/my/rupture_traces.shp))
+create_ecs_input_measurements(file.path(path/to/my/displ_meas_sites.shp))
+create_ecs_input_haz_sites(file.path(path/to/my/hazard_study_sites.shp))
 ```
 
 For more examples, see the Vignettes:
 
 - [Creating ECS input files for Fault Displacement Hazard Analysis](https://github.com/asarmy/ECSprep/blob/master/vignettes/example-1.Rmd)
-is an example showing how to create the ruptures input file from a standard 
-Esri shapefile.
+is an example geared toward forward-application of fault displacement hazard 
+analysis models based on mapped traces of active faults and hazard evaluation
+sites.
+
+- [Creating ECS input files for presentation/analysis of data from a surface-rupturing earthquak](https://github.com/asarmy/ECSprep/blob/master/vignettes/example-2.Rmd)
+is an example geared toward presentation and analysis of post-earthquake fault 
+rupture and displacement data based on mapped traces of surface ruptures and 
+locations where fault displacement was measured.
+
+## "Gotchas"
+
+- Only Esri shapefiles are accepted as inputs. If other file types are attempted,
+then the user will be notified and the script will halt execution.
+
+- The shapefiles must have an assigned Coordinate Reference System (CRS); in
+other words, a PRJ file must be included.
+
+- *Principal* and *Distributed* rankings for faults and measurements are not 
+required but are recommended. The ECS algorithm performs better in complex
+ruptures when these are specified. They should be containted in a column
+called `Rank`.
+
+- A column called `displ` is required for processing fault displacement
+measurements. If it is not present, then the user will be notified and the 
+script will halt execution.
 
 
-- [Creating ECS input files for presentation/analysis of data from a surface-rupturing earthquake](https://github.com/asarmy/ECSprep/blob/master/vignettes/example-2.Rmd)
-is an example showing how to create the fault displacement and ruptures input 
-files from standard Esri shapefiles.
+
+
+
+
+
 
 
